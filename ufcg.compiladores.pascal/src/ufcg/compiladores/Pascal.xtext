@@ -174,10 +174,23 @@ for_statement:
 
 conditional_statement: 
 	ifStmt=if_statement // Para o escopo, somente if then else
+	| caseStmt=case_statement
 ;
 
 if_statement:
 	"if" expression=expression "then" ifStatement=statement ( "else" elseStatement=statement )	?
+;
+
+case_statement:
+	"case" expression "of" case_limbs+=case_limb (";" case_limbs+=case_limb)* ";" "end"
+;
+
+case_limb:
+	case_list=case_label_list ":" stmt=statement
+;
+
+case_label_list:
+	constants+=constant ("," constants+=constant)*	
 ;
 
 with_statement:
@@ -426,10 +439,6 @@ constant:
 	| boolLiteral="true" 
 	| boolLiteral="false" 
 	| nil="nil"
-;
-
-case_label_list:
-	constants+=constant ("," constants+=constant)*	
 ;
 
 abstraction_declaration:

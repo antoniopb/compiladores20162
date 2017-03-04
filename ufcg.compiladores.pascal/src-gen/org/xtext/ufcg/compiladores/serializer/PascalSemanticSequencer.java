@@ -23,6 +23,7 @@ import org.xtext.ufcg.compiladores.pascal.assignment_statement;
 import org.xtext.ufcg.compiladores.pascal.block;
 import org.xtext.ufcg.compiladores.pascal.bound_specification;
 import org.xtext.ufcg.compiladores.pascal.case_label_list;
+import org.xtext.ufcg.compiladores.pascal.case_limb;
 import org.xtext.ufcg.compiladores.pascal.compound_statement;
 import org.xtext.ufcg.compiladores.pascal.conditional_statement;
 import org.xtext.ufcg.compiladores.pascal.conformant_array_schema;
@@ -153,6 +154,9 @@ public class PascalSemanticSequencer extends AbstractDelegatingSemanticSequencer
 			case PascalPackage.CASE_LABEL_LIST:
 				sequence_case_label_list(context, (case_label_list) semanticObject); 
 				return; 
+			case PascalPackage.CASE_LIMB:
+				sequence_case_limb(context, (case_limb) semanticObject); 
+				return; 
 			case PascalPackage.COMPOUND_STATEMENT:
 				sequence_compound_statement(context, (compound_statement) semanticObject); 
 				return; 
@@ -178,8 +182,15 @@ public class PascalSemanticSequencer extends AbstractDelegatingSemanticSequencer
 				sequence_enumerated_type(context, (enumerated_type) semanticObject); 
 				return; 
 			case PascalPackage.EXPRESSION:
-				sequence_expression(context, (expression) semanticObject); 
-				return; 
+				if (rule == grammarAccess.getCase_statementRule()) {
+					sequence_case_statement_expression(context, (expression) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getExpressionRule()) {
+					sequence_expression(context, (expression) semanticObject); 
+					return; 
+				}
+				else break;
 			case PascalPackage.EXPRESSION_LIST:
 				sequence_expression_list(context, (expression_list) semanticObject); 
 				return; 
@@ -439,6 +450,44 @@ public class PascalSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Contexts:
+	 *     case_limb returns case_limb
+	 *
+	 * Constraint:
+	 *     (case_list=case_label_list stmt=statement)
+	 */
+	protected void sequence_case_limb(ISerializationContext context, case_limb semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, PascalPackage.Literals.CASE_LIMB__CASE_LIST) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, PascalPackage.Literals.CASE_LIMB__CASE_LIST));
+			if (transientValues.isValueTransient(semanticObject, PascalPackage.Literals.CASE_LIMB__STMT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, PascalPackage.Literals.CASE_LIMB__STMT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getCase_limbAccess().getCase_listCase_label_listParserRuleCall_0_0(), semanticObject.getCase_list());
+		feeder.accept(grammarAccess.getCase_limbAccess().getStmtStatementParserRuleCall_2_0(), semanticObject.getStmt());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     case_statement returns expression
+	 *
+	 * Constraint:
+	 *     (
+	 *         expressions+=simple_expression 
+	 *         ((operators+=RELATIONAL_OPERATOR | operators+='in' | operators+='=') expressions+=simple_expression)? 
+	 *         case_limbs+=case_limb 
+	 *         case_limbs+=case_limb*
+	 *     )
+	 */
+	protected void sequence_case_statement_expression(ISerializationContext context, expression semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     compound_statement returns compound_statement
 	 *
 	 * Constraint:
@@ -460,16 +509,10 @@ public class PascalSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     conditional_statement returns conditional_statement
 	 *
 	 * Constraint:
-	 *     ifStmt=if_statement
+	 *     (ifStmt=if_statement | caseStmt=case_statement)
 	 */
 	protected void sequence_conditional_statement(ISerializationContext context, conditional_statement semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, PascalPackage.Literals.CONDITIONAL_STATEMENT__IF_STMT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, PascalPackage.Literals.CONDITIONAL_STATEMENT__IF_STMT));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getConditional_statementAccess().getIfStmtIf_statementParserRuleCall_0(), semanticObject.getIfStmt());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	

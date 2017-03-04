@@ -2673,21 +2673,43 @@ ruleconditional_statement returns [EObject current=null]
 }:
 	(
 		(
-			{
-				newCompositeNode(grammarAccess.getConditional_statementAccess().getIfStmtIf_statementParserRuleCall_0());
-			}
-			lv_ifStmt_0_0=ruleif_statement
-			{
-				if ($current==null) {
-					$current = createModelElementForParent(grammarAccess.getConditional_statementRule());
+			(
+				{
+					newCompositeNode(grammarAccess.getConditional_statementAccess().getIfStmtIf_statementParserRuleCall_0_0());
 				}
-				set(
-					$current,
-					"ifStmt",
-					lv_ifStmt_0_0,
-					"org.xtext.ufcg.compiladores.Pascal.if_statement");
-				afterParserOrEnumRuleCall();
-			}
+				lv_ifStmt_0_0=ruleif_statement
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getConditional_statementRule());
+					}
+					set(
+						$current,
+						"ifStmt",
+						lv_ifStmt_0_0,
+						"org.xtext.ufcg.compiladores.Pascal.if_statement");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		    |
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getConditional_statementAccess().getCaseStmtCase_statementParserRuleCall_1_0());
+				}
+				lv_caseStmt_1_0=rulecase_statement
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getConditional_statementRule());
+					}
+					set(
+						$current,
+						"caseStmt",
+						lv_caseStmt_1_0,
+						"org.xtext.ufcg.compiladores.Pascal.case_statement");
+					afterParserOrEnumRuleCall();
+				}
+			)
 		)
 	)
 ;
@@ -2779,6 +2801,217 @@ ruleif_statement returns [EObject current=null]
 				)
 			)
 		)?
+	)
+;
+
+// Entry rule entryRulecase_statement
+entryRulecase_statement returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getCase_statementRule()); }
+	iv_rulecase_statement=rulecase_statement
+	{ $current=$iv_rulecase_statement.current; }
+	EOF;
+
+// Rule case_statement
+rulecase_statement returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		otherlv_0='case'
+		{
+			newLeafNode(otherlv_0, grammarAccess.getCase_statementAccess().getCaseKeyword_0());
+		}
+		{
+			newCompositeNode(grammarAccess.getCase_statementAccess().getExpressionParserRuleCall_1());
+		}
+		this_expression_1=ruleexpression
+		{
+			$current = $this_expression_1.current;
+			afterParserOrEnumRuleCall();
+		}
+		otherlv_2='of'
+		{
+			newLeafNode(otherlv_2, grammarAccess.getCase_statementAccess().getOfKeyword_2());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getCase_statementAccess().getCase_limbsCase_limbParserRuleCall_3_0());
+				}
+				lv_case_limbs_3_0=rulecase_limb
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getCase_statementRule());
+					}
+					add(
+						$current,
+						"case_limbs",
+						lv_case_limbs_3_0,
+						"org.xtext.ufcg.compiladores.Pascal.case_limb");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		(
+			otherlv_4=';'
+			{
+				newLeafNode(otherlv_4, grammarAccess.getCase_statementAccess().getSemicolonKeyword_4_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getCase_statementAccess().getCase_limbsCase_limbParserRuleCall_4_1_0());
+					}
+					lv_case_limbs_5_0=rulecase_limb
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getCase_statementRule());
+						}
+						add(
+							$current,
+							"case_limbs",
+							lv_case_limbs_5_0,
+							"org.xtext.ufcg.compiladores.Pascal.case_limb");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)*
+		otherlv_6=';'
+		{
+			newLeafNode(otherlv_6, grammarAccess.getCase_statementAccess().getSemicolonKeyword_5());
+		}
+		otherlv_7='end'
+		{
+			newLeafNode(otherlv_7, grammarAccess.getCase_statementAccess().getEndKeyword_6());
+		}
+	)
+;
+
+// Entry rule entryRulecase_limb
+entryRulecase_limb returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getCase_limbRule()); }
+	iv_rulecase_limb=rulecase_limb
+	{ $current=$iv_rulecase_limb.current; }
+	EOF;
+
+// Rule case_limb
+rulecase_limb returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getCase_limbAccess().getCase_listCase_label_listParserRuleCall_0_0());
+				}
+				lv_case_list_0_0=rulecase_label_list
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getCase_limbRule());
+					}
+					set(
+						$current,
+						"case_list",
+						lv_case_list_0_0,
+						"org.xtext.ufcg.compiladores.Pascal.case_label_list");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		otherlv_1=':'
+		{
+			newLeafNode(otherlv_1, grammarAccess.getCase_limbAccess().getColonKeyword_1());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getCase_limbAccess().getStmtStatementParserRuleCall_2_0());
+				}
+				lv_stmt_2_0=rulestatement
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getCase_limbRule());
+					}
+					set(
+						$current,
+						"stmt",
+						lv_stmt_2_0,
+						"org.xtext.ufcg.compiladores.Pascal.statement");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+	)
+;
+
+// Entry rule entryRulecase_label_list
+entryRulecase_label_list returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getCase_label_listRule()); }
+	iv_rulecase_label_list=rulecase_label_list
+	{ $current=$iv_rulecase_label_list.current; }
+	EOF;
+
+// Rule case_label_list
+rulecase_label_list returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getCase_label_listAccess().getConstantsConstantParserRuleCall_0_0());
+				}
+				lv_constants_0_0=ruleconstant
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getCase_label_listRule());
+					}
+					add(
+						$current,
+						"constants",
+						lv_constants_0_0,
+						"org.xtext.ufcg.compiladores.Pascal.constant");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		(
+			otherlv_1=','
+			{
+				newLeafNode(otherlv_1, grammarAccess.getCase_label_listAccess().getCommaKeyword_1_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getCase_label_listAccess().getConstantsConstantParserRuleCall_1_1_0());
+					}
+					lv_constants_2_0=ruleconstant
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getCase_label_listRule());
+						}
+						add(
+							$current,
+							"constants",
+							lv_constants_2_0,
+							"org.xtext.ufcg.compiladores.Pascal.constant");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)*
 	)
 ;
 
@@ -5549,69 +5782,6 @@ ruleconstant returns [EObject current=null]
 				}
 			)
 		)
-	)
-;
-
-// Entry rule entryRulecase_label_list
-entryRulecase_label_list returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getCase_label_listRule()); }
-	iv_rulecase_label_list=rulecase_label_list
-	{ $current=$iv_rulecase_label_list.current; }
-	EOF;
-
-// Rule case_label_list
-rulecase_label_list returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			(
-				{
-					newCompositeNode(grammarAccess.getCase_label_listAccess().getConstantsConstantParserRuleCall_0_0());
-				}
-				lv_constants_0_0=ruleconstant
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getCase_label_listRule());
-					}
-					add(
-						$current,
-						"constants",
-						lv_constants_0_0,
-						"org.xtext.ufcg.compiladores.Pascal.constant");
-					afterParserOrEnumRuleCall();
-				}
-			)
-		)
-		(
-			otherlv_1=','
-			{
-				newLeafNode(otherlv_1, grammarAccess.getCase_label_listAccess().getCommaKeyword_1_0());
-			}
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getCase_label_listAccess().getConstantsConstantParserRuleCall_1_1_0());
-					}
-					lv_constants_2_0=ruleconstant
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getCase_label_listRule());
-						}
-						add(
-							$current,
-							"constants",
-							lv_constants_2_0,
-							"org.xtext.ufcg.compiladores.Pascal.constant");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-		)*
 	)
 ;
 

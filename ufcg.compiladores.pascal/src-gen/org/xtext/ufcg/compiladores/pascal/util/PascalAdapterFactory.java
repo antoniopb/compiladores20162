@@ -261,6 +261,21 @@ public class PascalAdapterFactory extends AdapterFactoryImpl
         return createif_statementAdapter();
       }
       @Override
+      public Adapter casecase_statement(case_statement object)
+      {
+        return createcase_statementAdapter();
+      }
+      @Override
+      public Adapter casecase_limb(case_limb object)
+      {
+        return createcase_limbAdapter();
+      }
+      @Override
+      public Adapter casecase_label_list(case_label_list object)
+      {
+        return createcase_label_listAdapter();
+      }
+      @Override
       public Adapter casewith_statement(with_statement object)
       {
         return createwith_statementAdapter();
@@ -424,11 +439,6 @@ public class PascalAdapterFactory extends AdapterFactoryImpl
       public Adapter caseconstant(constant object)
       {
         return createconstantAdapter();
-      }
-      @Override
-      public Adapter casecase_label_list(case_label_list object)
-      {
-        return createcase_label_listAdapter();
       }
       @Override
       public Adapter defaultCase(EObject object)
@@ -1008,6 +1018,51 @@ public class PascalAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link org.xtext.ufcg.compiladores.pascal.case_statement <em>case statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.xtext.ufcg.compiladores.pascal.case_statement
+   * @generated
+   */
+  public Adapter createcase_statementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.xtext.ufcg.compiladores.pascal.case_limb <em>case limb</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.xtext.ufcg.compiladores.pascal.case_limb
+   * @generated
+   */
+  public Adapter createcase_limbAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.xtext.ufcg.compiladores.pascal.case_label_list <em>case label list</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.xtext.ufcg.compiladores.pascal.case_label_list
+   * @generated
+   */
+  public Adapter createcase_label_listAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link org.xtext.ufcg.compiladores.pascal.with_statement <em>with statement</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1498,21 +1553,6 @@ public class PascalAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createconstantAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.xtext.ufcg.compiladores.pascal.case_label_list <em>case label list</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.xtext.ufcg.compiladores.pascal.case_label_list
-   * @generated
-   */
-  public Adapter createcase_label_listAdapter()
   {
     return null;
   }

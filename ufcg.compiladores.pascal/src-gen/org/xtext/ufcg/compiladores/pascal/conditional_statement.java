@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.xtext.ufcg.compiladores.pascal.conditional_statement#getIfStmt <em>If Stmt</em>}</li>
+ *   <li>{@link org.xtext.ufcg.compiladores.pascal.conditional_statement#getCaseStmt <em>Case Stmt</em>}</li>
  * </ul>
  *
  * @see org.xtext.ufcg.compiladores.pascal.PascalPackage#getconditional_statement()
@@ -48,5 +49,31 @@ public interface conditional_statement extends EObject
    * @generated
    */
   void setIfStmt(if_statement value);
+
+  /**
+   * Returns the value of the '<em><b>Case Stmt</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Case Stmt</em>' containment reference isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Case Stmt</em>' containment reference.
+   * @see #setCaseStmt(case_statement)
+   * @see org.xtext.ufcg.compiladores.pascal.PascalPackage#getconditional_statement_CaseStmt()
+   * @model containment="true"
+   * @generated
+   */
+  case_statement getCaseStmt();
+
+  /**
+   * Sets the value of the '{@link org.xtext.ufcg.compiladores.pascal.conditional_statement#getCaseStmt <em>Case Stmt</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Case Stmt</em>' containment reference.
+   * @see #getCaseStmt()
+   * @generated
+   */
+  void setCaseStmt(case_statement value);
 
 } // conditional_statement

@@ -42,6 +42,7 @@ public class PascalParser extends AbstractContentAssistParser {
 					put(grammarAccess.getStructured_statementAccess().getAlternatives(), "rule__Structured_statement__Alternatives");
 					put(grammarAccess.getRepetitive_statementAccess().getAlternatives(), "rule__Repetitive_statement__Alternatives");
 					put(grammarAccess.getFor_statementAccess().getAlternatives_4(), "rule__For_statement__Alternatives_4");
+					put(grammarAccess.getConditional_statementAccess().getAlternatives(), "rule__Conditional_statement__Alternatives");
 					put(grammarAccess.getExpressionAccess().getAlternatives_1_0(), "rule__Expression__Alternatives_1_0");
 					put(grammarAccess.getSimple_expressionAccess().getAlternatives_2(), "rule__Simple_expression__Alternatives_2");
 					put(grammarAccess.getSimple_expressionAccess().getAlternatives_2_0_0(), "rule__Simple_expression__Alternatives_2_0_0");
@@ -103,6 +104,11 @@ public class PascalParser extends AbstractContentAssistParser {
 					put(grammarAccess.getFor_statementAccess().getGroup(), "rule__For_statement__Group__0");
 					put(grammarAccess.getIf_statementAccess().getGroup(), "rule__If_statement__Group__0");
 					put(grammarAccess.getIf_statementAccess().getGroup_4(), "rule__If_statement__Group_4__0");
+					put(grammarAccess.getCase_statementAccess().getGroup(), "rule__Case_statement__Group__0");
+					put(grammarAccess.getCase_statementAccess().getGroup_4(), "rule__Case_statement__Group_4__0");
+					put(grammarAccess.getCase_limbAccess().getGroup(), "rule__Case_limb__Group__0");
+					put(grammarAccess.getCase_label_listAccess().getGroup(), "rule__Case_label_list__Group__0");
+					put(grammarAccess.getCase_label_listAccess().getGroup_1(), "rule__Case_label_list__Group_1__0");
 					put(grammarAccess.getWith_statementAccess().getGroup(), "rule__With_statement__Group__0");
 					put(grammarAccess.getWith_statementAccess().getGroup_2(), "rule__With_statement__Group_2__0");
 					put(grammarAccess.getExpressionAccess().getGroup(), "rule__Expression__Group__0");
@@ -146,8 +152,6 @@ public class PascalParser extends AbstractContentAssistParser {
 					put(grammarAccess.getIdentifier_listAccess().getGroup(), "rule__Identifier_list__Group__0");
 					put(grammarAccess.getIdentifier_listAccess().getGroup_1(), "rule__Identifier_list__Group_1__0");
 					put(grammarAccess.getConstantAccess().getGroup_0(), "rule__Constant__Group_0__0");
-					put(grammarAccess.getCase_label_listAccess().getGroup(), "rule__Case_label_list__Group__0");
-					put(grammarAccess.getCase_label_listAccess().getGroup_1(), "rule__Case_label_list__Group_1__0");
 					put(grammarAccess.getProgramAccess().getHeadingAssignment_0(), "rule__Program__HeadingAssignment_0");
 					put(grammarAccess.getProgramAccess().getBlockAssignment_1(), "rule__Program__BlockAssignment_1");
 					put(grammarAccess.getProgram_headingAccess().getNameAssignment_1(), "rule__Program_heading__NameAssignment_1");
@@ -234,10 +238,17 @@ public class PascalParser extends AbstractContentAssistParser {
 					put(grammarAccess.getFor_statementAccess().getExpressionInitAssignment_3(), "rule__For_statement__ExpressionInitAssignment_3");
 					put(grammarAccess.getFor_statementAccess().getExpressionFinAssignment_5(), "rule__For_statement__ExpressionFinAssignment_5");
 					put(grammarAccess.getFor_statementAccess().getStmtAssignment_7(), "rule__For_statement__StmtAssignment_7");
-					put(grammarAccess.getConditional_statementAccess().getIfStmtAssignment(), "rule__Conditional_statement__IfStmtAssignment");
+					put(grammarAccess.getConditional_statementAccess().getIfStmtAssignment_0(), "rule__Conditional_statement__IfStmtAssignment_0");
+					put(grammarAccess.getConditional_statementAccess().getCaseStmtAssignment_1(), "rule__Conditional_statement__CaseStmtAssignment_1");
 					put(grammarAccess.getIf_statementAccess().getExpressionAssignment_1(), "rule__If_statement__ExpressionAssignment_1");
 					put(grammarAccess.getIf_statementAccess().getIfStatementAssignment_3(), "rule__If_statement__IfStatementAssignment_3");
 					put(grammarAccess.getIf_statementAccess().getElseStatementAssignment_4_1(), "rule__If_statement__ElseStatementAssignment_4_1");
+					put(grammarAccess.getCase_statementAccess().getCase_limbsAssignment_3(), "rule__Case_statement__Case_limbsAssignment_3");
+					put(grammarAccess.getCase_statementAccess().getCase_limbsAssignment_4_1(), "rule__Case_statement__Case_limbsAssignment_4_1");
+					put(grammarAccess.getCase_limbAccess().getCase_listAssignment_0(), "rule__Case_limb__Case_listAssignment_0");
+					put(grammarAccess.getCase_limbAccess().getStmtAssignment_2(), "rule__Case_limb__StmtAssignment_2");
+					put(grammarAccess.getCase_label_listAccess().getConstantsAssignment_0(), "rule__Case_label_list__ConstantsAssignment_0");
+					put(grammarAccess.getCase_label_listAccess().getConstantsAssignment_1_1(), "rule__Case_label_list__ConstantsAssignment_1_1");
 					put(grammarAccess.getWith_statementAccess().getRecordAssignment_1(), "rule__With_statement__RecordAssignment_1");
 					put(grammarAccess.getWith_statementAccess().getRecordsAssignment_2_1(), "rule__With_statement__RecordsAssignment_2_1");
 					put(grammarAccess.getWith_statementAccess().getStmtAssignment_4(), "rule__With_statement__StmtAssignment_4");
@@ -341,8 +352,6 @@ public class PascalParser extends AbstractContentAssistParser {
 					put(grammarAccess.getConstantAccess().getBoolLiteralAssignment_2(), "rule__Constant__BoolLiteralAssignment_2");
 					put(grammarAccess.getConstantAccess().getBoolLiteralAssignment_3(), "rule__Constant__BoolLiteralAssignment_3");
 					put(grammarAccess.getConstantAccess().getNilAssignment_4(), "rule__Constant__NilAssignment_4");
-					put(grammarAccess.getCase_label_listAccess().getConstantsAssignment_0(), "rule__Case_label_list__ConstantsAssignment_0");
-					put(grammarAccess.getCase_label_listAccess().getConstantsAssignment_1_1(), "rule__Case_label_list__ConstantsAssignment_1_1");
 				}
 			};
 		}

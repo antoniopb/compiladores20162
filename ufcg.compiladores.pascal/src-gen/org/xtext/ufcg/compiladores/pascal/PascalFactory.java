@@ -357,6 +357,33 @@ public interface PascalFactory extends EFactory
   if_statement createif_statement();
 
   /**
+   * Returns a new object of class '<em>case statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>case statement</em>'.
+   * @generated
+   */
+  case_statement createcase_statement();
+
+  /**
+   * Returns a new object of class '<em>case limb</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>case limb</em>'.
+   * @generated
+   */
+  case_limb createcase_limb();
+
+  /**
+   * Returns a new object of class '<em>case label list</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>case label list</em>'.
+   * @generated
+   */
+  case_label_list createcase_label_list();
+
+  /**
    * Returns a new object of class '<em>with statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -652,15 +679,6 @@ public interface PascalFactory extends EFactory
    * @generated
    */
   constant createconstant();
-
-  /**
-   * Returns a new object of class '<em>case label list</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>case label list</em>'.
-   * @generated
-   */
-  case_label_list createcase_label_list();
 
   /**
    * Returns the package supported by this factory.

@@ -213,6 +213,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="conditional_statement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="ifStmt" eType="#//if_statement"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="caseStmt" eType="#//case_statement"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="if_statement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="expression" eType="#//expression"
@@ -222,6 +224,17 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="elseStatement" eType="#//statement"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="case_statement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="case_limb">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="case_list" eType="#//case_label_list"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stmt" eType="#//statement"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="case_label_list">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constants" upperBound="-1"
+        eType="#//constant" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="with_statement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="record" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="records" unique="false"
@@ -229,7 +242,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="stmt" eType="#//statement"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="expression">
+  <eClassifiers xsi:type="ecore:EClass" name="expression" eSuperTypes="#//case_statement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="case_limbs" upperBound="-1"
+        eType="#//case_limb" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expressions" upperBound="-1"
         eType="#//simple_expression" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="operators" unique="false"
@@ -417,9 +432,5 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="string" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="boolLiteral" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nil" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="case_label_list">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="constants" upperBound="-1"
-        eType="#//constant" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

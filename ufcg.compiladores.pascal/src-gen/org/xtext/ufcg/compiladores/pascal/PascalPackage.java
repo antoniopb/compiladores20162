@@ -1453,13 +1453,22 @@ public interface PascalPackage extends EPackage
   int CONDITIONAL_STATEMENT__IF_STMT = 0;
 
   /**
+   * The feature id for the '<em><b>Case Stmt</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CONDITIONAL_STATEMENT__CASE_STMT = 1;
+
+  /**
    * The number of structural features of the '<em>conditional statement</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int CONDITIONAL_STATEMENT_FEATURE_COUNT = 1;
+  int CONDITIONAL_STATEMENT_FEATURE_COUNT = 2;
 
   /**
    * The meta object id for the '{@link org.xtext.ufcg.compiladores.pascal.impl.if_statementImpl <em>if statement</em>}' class.
@@ -1508,6 +1517,90 @@ public interface PascalPackage extends EPackage
   int IF_STATEMENT_FEATURE_COUNT = 3;
 
   /**
+   * The meta object id for the '{@link org.xtext.ufcg.compiladores.pascal.impl.case_statementImpl <em>case statement</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.xtext.ufcg.compiladores.pascal.impl.case_statementImpl
+   * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getcase_statement()
+   * @generated
+   */
+  int CASE_STATEMENT = 37;
+
+  /**
+   * The number of structural features of the '<em>case statement</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CASE_STATEMENT_FEATURE_COUNT = 0;
+
+  /**
+   * The meta object id for the '{@link org.xtext.ufcg.compiladores.pascal.impl.case_limbImpl <em>case limb</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.xtext.ufcg.compiladores.pascal.impl.case_limbImpl
+   * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getcase_limb()
+   * @generated
+   */
+  int CASE_LIMB = 38;
+
+  /**
+   * The feature id for the '<em><b>Case list</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CASE_LIMB__CASE_LIST = 0;
+
+  /**
+   * The feature id for the '<em><b>Stmt</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CASE_LIMB__STMT = 1;
+
+  /**
+   * The number of structural features of the '<em>case limb</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CASE_LIMB_FEATURE_COUNT = 2;
+
+  /**
+   * The meta object id for the '{@link org.xtext.ufcg.compiladores.pascal.impl.case_label_listImpl <em>case label list</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.xtext.ufcg.compiladores.pascal.impl.case_label_listImpl
+   * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getcase_label_list()
+   * @generated
+   */
+  int CASE_LABEL_LIST = 39;
+
+  /**
+   * The feature id for the '<em><b>Constants</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CASE_LABEL_LIST__CONSTANTS = 0;
+
+  /**
+   * The number of structural features of the '<em>case label list</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CASE_LABEL_LIST_FEATURE_COUNT = 1;
+
+  /**
    * The meta object id for the '{@link org.xtext.ufcg.compiladores.pascal.impl.with_statementImpl <em>with statement</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1515,7 +1608,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getwith_statement()
    * @generated
    */
-  int WITH_STATEMENT = 37;
+  int WITH_STATEMENT = 40;
 
   /**
    * The feature id for the '<em><b>Record</b></em>' attribute.
@@ -1561,7 +1654,16 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getexpression()
    * @generated
    */
-  int EXPRESSION = 38;
+  int EXPRESSION = 41;
+
+  /**
+   * The feature id for the '<em><b>Case limbs</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EXPRESSION__CASE_LIMBS = CASE_STATEMENT_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Expressions</b></em>' containment reference list.
@@ -1570,7 +1672,7 @@ public interface PascalPackage extends EPackage
    * @generated
    * @ordered
    */
-  int EXPRESSION__EXPRESSIONS = 0;
+  int EXPRESSION__EXPRESSIONS = CASE_STATEMENT_FEATURE_COUNT + 1;
 
   /**
    * The feature id for the '<em><b>Operators</b></em>' attribute list.
@@ -1579,7 +1681,7 @@ public interface PascalPackage extends EPackage
    * @generated
    * @ordered
    */
-  int EXPRESSION__OPERATORS = 1;
+  int EXPRESSION__OPERATORS = CASE_STATEMENT_FEATURE_COUNT + 2;
 
   /**
    * The number of structural features of the '<em>expression</em>' class.
@@ -1588,7 +1690,7 @@ public interface PascalPackage extends EPackage
    * @generated
    * @ordered
    */
-  int EXPRESSION_FEATURE_COUNT = 2;
+  int EXPRESSION_FEATURE_COUNT = CASE_STATEMENT_FEATURE_COUNT + 3;
 
   /**
    * The meta object id for the '{@link org.xtext.ufcg.compiladores.pascal.impl.simple_expressionImpl <em>simple expression</em>}' class.
@@ -1598,7 +1700,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getsimple_expression()
    * @generated
    */
-  int SIMPLE_EXPRESSION = 39;
+  int SIMPLE_EXPRESSION = 42;
 
   /**
    * The feature id for the '<em><b>Prefix Operator</b></em>' attribute.
@@ -1644,7 +1746,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getterm()
    * @generated
    */
-  int TERM = 40;
+  int TERM = 43;
 
   /**
    * The feature id for the '<em><b>Factors</b></em>' containment reference list.
@@ -1681,7 +1783,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getfactor()
    * @generated
    */
-  int FACTOR = 41;
+  int FACTOR = 44;
 
   /**
    * The feature id for the '<em><b>Variable</b></em>' containment reference.
@@ -1781,7 +1883,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getvariable()
    * @generated
    */
-  int VARIABLE = 42;
+  int VARIABLE = 45;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1818,7 +1920,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getresto()
    * @generated
    */
-  int RESTO = 43;
+  int RESTO = 46;
 
   /**
    * The feature id for the '<em><b>Expressions</b></em>' containment reference.
@@ -1891,7 +1993,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getset()
    * @generated
    */
-  int SET = 44;
+  int SET = 47;
 
   /**
    * The feature id for the '<em><b>Brackets</b></em>' attribute list.
@@ -1928,7 +2030,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getexpression_list()
    * @generated
    */
-  int EXPRESSION_LIST = 45;
+  int EXPRESSION_LIST = 48;
 
   /**
    * The feature id for the '<em><b>Expressions</b></em>' containment reference list.
@@ -1956,7 +2058,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getfunction_designator()
    * @generated
    */
-  int FUNCTION_DESIGNATOR = 46;
+  int FUNCTION_DESIGNATOR = 49;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1993,7 +2095,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#gettype()
    * @generated
    */
-  int TYPE = 47;
+  int TYPE = 50;
 
   /**
    * The feature id for the '<em><b>Simple</b></em>' containment reference.
@@ -2039,7 +2141,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getsimple_type()
    * @generated
    */
-  int SIMPLE_TYPE = 48;
+  int SIMPLE_TYPE = 51;
 
   /**
    * The feature id for the '<em><b>Subrange</b></em>' containment reference.
@@ -2085,7 +2187,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getenumerated_type()
    * @generated
    */
-  int ENUMERATED_TYPE = 49;
+  int ENUMERATED_TYPE = 52;
 
   /**
    * The feature id for the '<em><b>Identifiers</b></em>' containment reference.
@@ -2113,7 +2215,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getsubrange_type()
    * @generated
    */
-  int SUBRANGE_TYPE = 50;
+  int SUBRANGE_TYPE = 53;
 
   /**
    * The feature id for the '<em><b>Initial Const</b></em>' containment reference.
@@ -2168,7 +2270,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getstructured_type()
    * @generated
    */
-  int STRUCTURED_TYPE = 51;
+  int STRUCTURED_TYPE = 54;
 
   /**
    * The feature id for the '<em><b>Packed</b></em>' attribute.
@@ -2205,7 +2307,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getunpacked_structured_type()
    * @generated
    */
-  int UNPACKED_STRUCTURED_TYPE = 52;
+  int UNPACKED_STRUCTURED_TYPE = 55;
 
   /**
    * The feature id for the '<em><b>Array</b></em>' containment reference.
@@ -2260,7 +2362,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getarray_type()
    * @generated
    */
-  int ARRAY_TYPE = 53;
+  int ARRAY_TYPE = 56;
 
   /**
    * The feature id for the '<em><b>Indexes</b></em>' containment reference list.
@@ -2297,7 +2399,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getrecord_type()
    * @generated
    */
-  int RECORD_TYPE = 54;
+  int RECORD_TYPE = 57;
 
   /**
    * The feature id for the '<em><b>Record</b></em>' attribute.
@@ -2343,7 +2445,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getset_type()
    * @generated
    */
-  int SET_TYPE = 55;
+  int SET_TYPE = 58;
 
   /**
    * The feature id for the '<em><b>Type</b></em>' containment reference.
@@ -2371,7 +2473,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getfile_type()
    * @generated
    */
-  int FILE_TYPE = 56;
+  int FILE_TYPE = 59;
 
   /**
    * The feature id for the '<em><b>Type</b></em>' containment reference.
@@ -2399,7 +2501,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getpointer_type()
    * @generated
    */
-  int POINTER_TYPE = 57;
+  int POINTER_TYPE = 60;
 
   /**
    * The feature id for the '<em><b>Type</b></em>' containment reference.
@@ -2427,7 +2529,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getfield_list()
    * @generated
    */
-  int FIELD_LIST = 58;
+  int FIELD_LIST = 61;
 
   /**
    * The feature id for the '<em><b>Fixed</b></em>' containment reference.
@@ -2464,7 +2566,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getfixed_part()
    * @generated
    */
-  int FIXED_PART = 59;
+  int FIXED_PART = 62;
 
   /**
    * The feature id for the '<em><b>Sections</b></em>' containment reference list.
@@ -2492,7 +2594,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getrecord_section()
    * @generated
    */
-  int RECORD_SECTION = 60;
+  int RECORD_SECTION = 63;
 
   /**
    * The feature id for the '<em><b>Identifiers</b></em>' containment reference.
@@ -2529,7 +2631,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getvariant_part()
    * @generated
    */
-  int VARIANT_PART = 61;
+  int VARIANT_PART = 64;
 
   /**
    * The feature id for the '<em><b>Tag</b></em>' containment reference.
@@ -2575,7 +2677,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#gettag_field()
    * @generated
    */
-  int TAG_FIELD = 62;
+  int TAG_FIELD = 65;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2603,7 +2705,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getvariant()
    * @generated
    */
-  int VARIANT = 63;
+  int VARIANT = 66;
 
   /**
    * The feature id for the '<em><b>Labels</b></em>' containment reference.
@@ -2640,7 +2742,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getvariable_identifier_list()
    * @generated
    */
-  int VARIABLE_IDENTIFIER_LIST = 64;
+  int VARIABLE_IDENTIFIER_LIST = 67;
 
   /**
    * The feature id for the '<em><b>Names</b></em>' attribute list.
@@ -2668,7 +2770,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getidentifier_list()
    * @generated
    */
-  int IDENTIFIER_LIST = 65;
+  int IDENTIFIER_LIST = 68;
 
   /**
    * The feature id for the '<em><b>Ids</b></em>' attribute list.
@@ -2696,7 +2798,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getnumber()
    * @generated
    */
-  int NUMBER = 66;
+  int NUMBER = 69;
 
   /**
    * The feature id for the '<em><b>Number</b></em>' containment reference.
@@ -2724,7 +2826,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getany_number()
    * @generated
    */
-  int ANY_NUMBER = 67;
+  int ANY_NUMBER = 70;
 
   /**
    * The feature id for the '<em><b>Integer</b></em>' attribute.
@@ -2761,7 +2863,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getlabel()
    * @generated
    */
-  int LABEL = 68;
+  int LABEL = 71;
 
   /**
    * The feature id for the '<em><b>Number</b></em>' attribute.
@@ -2789,7 +2891,7 @@ public interface PascalPackage extends EPackage
    * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getconstant()
    * @generated
    */
-  int CONSTANT = 69;
+  int CONSTANT = 72;
 
   /**
    * The feature id for the '<em><b>Opterator</b></em>' attribute.
@@ -2853,34 +2955,6 @@ public interface PascalPackage extends EPackage
    * @ordered
    */
   int CONSTANT_FEATURE_COUNT = 6;
-
-  /**
-   * The meta object id for the '{@link org.xtext.ufcg.compiladores.pascal.impl.case_label_listImpl <em>case label list</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see org.xtext.ufcg.compiladores.pascal.impl.case_label_listImpl
-   * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getcase_label_list()
-   * @generated
-   */
-  int CASE_LABEL_LIST = 70;
-
-  /**
-   * The feature id for the '<em><b>Constants</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CASE_LABEL_LIST__CONSTANTS = 0;
-
-  /**
-   * The number of structural features of the '<em>case label list</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CASE_LABEL_LIST_FEATURE_COUNT = 1;
 
 
   /**
@@ -4091,6 +4165,17 @@ public interface PascalPackage extends EPackage
   EReference getconditional_statement_IfStmt();
 
   /**
+   * Returns the meta object for the containment reference '{@link org.xtext.ufcg.compiladores.pascal.conditional_statement#getCaseStmt <em>Case Stmt</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Case Stmt</em>'.
+   * @see org.xtext.ufcg.compiladores.pascal.conditional_statement#getCaseStmt()
+   * @see #getconditional_statement()
+   * @generated
+   */
+  EReference getconditional_statement_CaseStmt();
+
+  /**
    * Returns the meta object for class '{@link org.xtext.ufcg.compiladores.pascal.if_statement <em>if statement</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -4132,6 +4217,69 @@ public interface PascalPackage extends EPackage
    * @generated
    */
   EReference getif_statement_ElseStatement();
+
+  /**
+   * Returns the meta object for class '{@link org.xtext.ufcg.compiladores.pascal.case_statement <em>case statement</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>case statement</em>'.
+   * @see org.xtext.ufcg.compiladores.pascal.case_statement
+   * @generated
+   */
+  EClass getcase_statement();
+
+  /**
+   * Returns the meta object for class '{@link org.xtext.ufcg.compiladores.pascal.case_limb <em>case limb</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>case limb</em>'.
+   * @see org.xtext.ufcg.compiladores.pascal.case_limb
+   * @generated
+   */
+  EClass getcase_limb();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.xtext.ufcg.compiladores.pascal.case_limb#getCase_list <em>Case list</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Case list</em>'.
+   * @see org.xtext.ufcg.compiladores.pascal.case_limb#getCase_list()
+   * @see #getcase_limb()
+   * @generated
+   */
+  EReference getcase_limb_Case_list();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.xtext.ufcg.compiladores.pascal.case_limb#getStmt <em>Stmt</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Stmt</em>'.
+   * @see org.xtext.ufcg.compiladores.pascal.case_limb#getStmt()
+   * @see #getcase_limb()
+   * @generated
+   */
+  EReference getcase_limb_Stmt();
+
+  /**
+   * Returns the meta object for class '{@link org.xtext.ufcg.compiladores.pascal.case_label_list <em>case label list</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>case label list</em>'.
+   * @see org.xtext.ufcg.compiladores.pascal.case_label_list
+   * @generated
+   */
+  EClass getcase_label_list();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link org.xtext.ufcg.compiladores.pascal.case_label_list#getConstants <em>Constants</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Constants</em>'.
+   * @see org.xtext.ufcg.compiladores.pascal.case_label_list#getConstants()
+   * @see #getcase_label_list()
+   * @generated
+   */
+  EReference getcase_label_list_Constants();
 
   /**
    * Returns the meta object for class '{@link org.xtext.ufcg.compiladores.pascal.with_statement <em>with statement</em>}'.
@@ -4185,6 +4333,17 @@ public interface PascalPackage extends EPackage
    * @generated
    */
   EClass getexpression();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link org.xtext.ufcg.compiladores.pascal.expression#getCase_limbs <em>Case limbs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Case limbs</em>'.
+   * @see org.xtext.ufcg.compiladores.pascal.expression#getCase_limbs()
+   * @see #getexpression()
+   * @generated
+   */
+  EReference getexpression_Case_limbs();
 
   /**
    * Returns the meta object for the containment reference list '{@link org.xtext.ufcg.compiladores.pascal.expression#getExpressions <em>Expressions</em>}'.
@@ -5344,27 +5503,6 @@ public interface PascalPackage extends EPackage
   EAttribute getconstant_Nil();
 
   /**
-   * Returns the meta object for class '{@link org.xtext.ufcg.compiladores.pascal.case_label_list <em>case label list</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>case label list</em>'.
-   * @see org.xtext.ufcg.compiladores.pascal.case_label_list
-   * @generated
-   */
-  EClass getcase_label_list();
-
-  /**
-   * Returns the meta object for the containment reference list '{@link org.xtext.ufcg.compiladores.pascal.case_label_list#getConstants <em>Constants</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Constants</em>'.
-   * @see org.xtext.ufcg.compiladores.pascal.case_label_list#getConstants()
-   * @see #getcase_label_list()
-   * @generated
-   */
-  EReference getcase_label_list_Constants();
-
-  /**
    * Returns the factory that creates the instances of the model.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -6364,6 +6502,14 @@ public interface PascalPackage extends EPackage
     EReference CONDITIONAL_STATEMENT__IF_STMT = eINSTANCE.getconditional_statement_IfStmt();
 
     /**
+     * The meta object literal for the '<em><b>Case Stmt</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CONDITIONAL_STATEMENT__CASE_STMT = eINSTANCE.getconditional_statement_CaseStmt();
+
+    /**
      * The meta object literal for the '{@link org.xtext.ufcg.compiladores.pascal.impl.if_statementImpl <em>if statement</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -6396,6 +6542,60 @@ public interface PascalPackage extends EPackage
      * @generated
      */
     EReference IF_STATEMENT__ELSE_STATEMENT = eINSTANCE.getif_statement_ElseStatement();
+
+    /**
+     * The meta object literal for the '{@link org.xtext.ufcg.compiladores.pascal.impl.case_statementImpl <em>case statement</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.xtext.ufcg.compiladores.pascal.impl.case_statementImpl
+     * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getcase_statement()
+     * @generated
+     */
+    EClass CASE_STATEMENT = eINSTANCE.getcase_statement();
+
+    /**
+     * The meta object literal for the '{@link org.xtext.ufcg.compiladores.pascal.impl.case_limbImpl <em>case limb</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.xtext.ufcg.compiladores.pascal.impl.case_limbImpl
+     * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getcase_limb()
+     * @generated
+     */
+    EClass CASE_LIMB = eINSTANCE.getcase_limb();
+
+    /**
+     * The meta object literal for the '<em><b>Case list</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CASE_LIMB__CASE_LIST = eINSTANCE.getcase_limb_Case_list();
+
+    /**
+     * The meta object literal for the '<em><b>Stmt</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CASE_LIMB__STMT = eINSTANCE.getcase_limb_Stmt();
+
+    /**
+     * The meta object literal for the '{@link org.xtext.ufcg.compiladores.pascal.impl.case_label_listImpl <em>case label list</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.xtext.ufcg.compiladores.pascal.impl.case_label_listImpl
+     * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getcase_label_list()
+     * @generated
+     */
+    EClass CASE_LABEL_LIST = eINSTANCE.getcase_label_list();
+
+    /**
+     * The meta object literal for the '<em><b>Constants</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CASE_LABEL_LIST__CONSTANTS = eINSTANCE.getcase_label_list_Constants();
 
     /**
      * The meta object literal for the '{@link org.xtext.ufcg.compiladores.pascal.impl.with_statementImpl <em>with statement</em>}' class.
@@ -6440,6 +6640,14 @@ public interface PascalPackage extends EPackage
      * @generated
      */
     EClass EXPRESSION = eINSTANCE.getexpression();
+
+    /**
+     * The meta object literal for the '<em><b>Case limbs</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference EXPRESSION__CASE_LIMBS = eINSTANCE.getexpression_Case_limbs();
 
     /**
      * The meta object literal for the '<em><b>Expressions</b></em>' containment reference list feature.
@@ -7366,24 +7574,6 @@ public interface PascalPackage extends EPackage
      * @generated
      */
     EAttribute CONSTANT__NIL = eINSTANCE.getconstant_Nil();
-
-    /**
-     * The meta object literal for the '{@link org.xtext.ufcg.compiladores.pascal.impl.case_label_listImpl <em>case label list</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.xtext.ufcg.compiladores.pascal.impl.case_label_listImpl
-     * @see org.xtext.ufcg.compiladores.pascal.impl.PascalPackageImpl#getcase_label_list()
-     * @generated
-     */
-    EClass CASE_LABEL_LIST = eINSTANCE.getcase_label_list();
-
-    /**
-     * The meta object literal for the '<em><b>Constants</b></em>' containment reference list feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference CASE_LABEL_LIST__CONSTANTS = eINSTANCE.getcase_label_list_Constants();
 
   }
 

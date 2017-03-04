@@ -102,6 +102,9 @@ public class PascalFactoryImpl extends EFactoryImpl implements PascalFactory
       case PascalPackage.FOR_STATEMENT: return createfor_statement();
       case PascalPackage.CONDITIONAL_STATEMENT: return createconditional_statement();
       case PascalPackage.IF_STATEMENT: return createif_statement();
+      case PascalPackage.CASE_STATEMENT: return createcase_statement();
+      case PascalPackage.CASE_LIMB: return createcase_limb();
+      case PascalPackage.CASE_LABEL_LIST: return createcase_label_list();
       case PascalPackage.WITH_STATEMENT: return createwith_statement();
       case PascalPackage.EXPRESSION: return createexpression();
       case PascalPackage.SIMPLE_EXPRESSION: return createsimple_expression();
@@ -135,7 +138,6 @@ public class PascalFactoryImpl extends EFactoryImpl implements PascalFactory
       case PascalPackage.ANY_NUMBER: return createany_number();
       case PascalPackage.LABEL: return createlabel();
       case PascalPackage.CONSTANT: return createconstant();
-      case PascalPackage.CASE_LABEL_LIST: return createcase_label_list();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -553,6 +555,39 @@ public class PascalFactoryImpl extends EFactoryImpl implements PascalFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public case_statement createcase_statement()
+  {
+    case_statementImpl case_statement = new case_statementImpl();
+    return case_statement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public case_limb createcase_limb()
+  {
+    case_limbImpl case_limb = new case_limbImpl();
+    return case_limb;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public case_label_list createcase_label_list()
+  {
+    case_label_listImpl case_label_list = new case_label_listImpl();
+    return case_label_list;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public with_statement createwith_statement()
   {
     with_statementImpl with_statement = new with_statementImpl();
@@ -909,17 +944,6 @@ public class PascalFactoryImpl extends EFactoryImpl implements PascalFactory
   {
     constantImpl constant = new constantImpl();
     return constant;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public case_label_list createcase_label_list()
-  {
-    case_label_listImpl case_label_list = new case_label_listImpl();
-    return case_label_list;
   }
 
   /**

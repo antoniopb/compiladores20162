@@ -154,11 +154,20 @@
     </genClasses>
     <genClasses ecoreClass="Pascal.ecore#//conditional_statement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pascal.ecore#//conditional_statement/ifStmt"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pascal.ecore#//conditional_statement/caseStmt"/>
     </genClasses>
     <genClasses ecoreClass="Pascal.ecore#//if_statement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pascal.ecore#//if_statement/expression"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pascal.ecore#//if_statement/ifStatement"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pascal.ecore#//if_statement/elseStatement"/>
+    </genClasses>
+    <genClasses ecoreClass="Pascal.ecore#//case_statement"/>
+    <genClasses ecoreClass="Pascal.ecore#//case_limb">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pascal.ecore#//case_limb/case_list"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pascal.ecore#//case_limb/stmt"/>
+    </genClasses>
+    <genClasses ecoreClass="Pascal.ecore#//case_label_list">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pascal.ecore#//case_label_list/constants"/>
     </genClasses>
     <genClasses ecoreClass="Pascal.ecore#//with_statement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Pascal.ecore#//with_statement/record"/>
@@ -166,6 +175,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pascal.ecore#//with_statement/stmt"/>
     </genClasses>
     <genClasses ecoreClass="Pascal.ecore#//expression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pascal.ecore#//expression/case_limbs"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pascal.ecore#//expression/expressions"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Pascal.ecore#//expression/operators"/>
     </genClasses>
@@ -305,9 +315,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Pascal.ecore#//constant/string"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Pascal.ecore#//constant/boolLiteral"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Pascal.ecore#//constant/nil"/>
-    </genClasses>
-    <genClasses ecoreClass="Pascal.ecore#//case_label_list">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pascal.ecore#//case_label_list/constants"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

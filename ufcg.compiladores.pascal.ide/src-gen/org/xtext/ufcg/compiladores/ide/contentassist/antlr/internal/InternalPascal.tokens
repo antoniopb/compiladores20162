@@ -9,11 +9,11 @@
 '='=32
 '['=42
 ']'=43
-'^'=58
+'^'=59
 'and'=67
 'array'=41
 'begin'=36
-'case'=61
+'case'=56
 'const'=31
 'div'=65
 'do'=49
@@ -21,7 +21,7 @@
 'else'=55
 'end'=37
 'false'=70
-'file'=60
+'file'=61
 'for'=52
 'forward'=62
 'function'=39
@@ -31,7 +31,7 @@
 'label'=29
 'mod'=66
 'nil'=68
-'not'=57
+'not'=58
 'of'=44
 'or'=64
 'packed'=40
@@ -39,7 +39,7 @@
 'program'=25
 'record'=71
 'repeat'=50
-'set'=59
+'set'=60
 'then'=54
 'to'=22
 'true'=69
@@ -47,7 +47,7 @@
 'until'=51
 'var'=34
 'while'=48
-'with'=56
+'with'=57
 RULE_ADDITION_OPERATOR=6
 RULE_ANY_OTHER=21
 RULE_DIGIT=16
