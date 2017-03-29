@@ -32,7 +32,7 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cFullStopKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		
 		////Programs and Blocks
-		// program:
+		//program:
 		//	heading=program_heading block=block ".";
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -68,17 +68,15 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cSemicolonKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		
 		//program_heading: //Pelo que vi de programas pascal, (identifier_list) é opcional.
-		// "program" name=ID ("("
-		//	identifiers=identifier_list ")")? ";";
+		//	"program" name=ID ("(" identifiers=identifier_list ")")? ";";
 		@Override public ParserRule getRule() { return rule; }
 		
 		////Pelo que vi de programas pascal, (identifier_list) é opcional.
-		// "program" name=ID ("(" identifiers=identifier_list
-		//")")? ";"
+		//"program" name=ID ("(" identifiers=identifier_list ")")? ";"
 		public Group getGroup() { return cGroup; }
 		
 		////Pelo que vi de programas pascal, (identifier_list) é opcional.
-		// "program"
+		//"program"
 		public Keyword getProgramKeyword_0() { return cProgramKeyword_0; }
 		
 		//name=ID
@@ -147,8 +145,11 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cAbstractionProcedure_and_function_declaration_partParserRuleCall_4_0 = (RuleCall)cAbstractionAssignment_4.eContents().get(0);
 		
 		//declaration_part:
-		//	label_decl=label_declaration_part? constant_def=constant_definition_part? type_def=type_definition_part?
-		//	variable_decl=variable_declaration_part? abstraction=procedure_and_function_declaration_part?;
+		//	label_decl=label_declaration_part?
+		//	constant_def=constant_definition_part?
+		//	type_def=type_definition_part?
+		//	variable_decl=variable_declaration_part?
+		//	abstraction=procedure_and_function_declaration_part?;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//label_decl=label_declaration_part? constant_def=constant_definition_part? type_def=type_definition_part?
@@ -584,7 +585,7 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cParametersFormal_parameter_listParserRuleCall_2_0 = (RuleCall)cParametersAssignment_2.eContents().get(0);
 		
 		//// Procedures and Function Definitions
-		// procedure_heading abstraction_heading:
+		//procedure_heading abstraction_heading:
 		//	"procedure" name=ID parameters=formal_parameter_list?;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -705,16 +706,15 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cFunctionFunction_headingParserRuleCall_3_0 = (RuleCall)cFunctionAssignment_3.eContents().get(0);
 		
 		//formal_parameter_section:
-		//	value=value_parameter_section | variable=variable_parameter_section | procedure=procedure_heading
-		//	//procedure-parameter-section e function leval direto aos heading
-		// | function=function_heading
-		//	//desnecessario colocar essas duas regras.
+		//	value=value_parameter_section
+		//	| variable=variable_parameter_section
+		//	| procedure=procedure_heading //procedure-parameter-section e function leval direto aos heading
+		//	| function=function_heading //desnecessario colocar essas duas regras.
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//value=value_parameter_section | variable=variable_parameter_section | procedure=procedure_heading
-		////procedure-parameter-section e function leval direto aos heading
-		// | function=function_heading
+		//value=value_parameter_section | variable=variable_parameter_section | procedure=procedure_heading //procedure-parameter-section e function leval direto aos heading
+		//| function=function_heading
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//value=value_parameter_section
@@ -816,7 +816,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cArrayConformant_array_schemaParserRuleCall_1_0 = (RuleCall)cArrayAssignment_1.eContents().get(0);
 		
 		//parameter_type:
-		//	name=ID | array=conformant_array_schema;
+		//	name=ID
+		//	| array=conformant_array_schema;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//name=ID | array=conformant_array_schema
@@ -843,7 +844,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cUnpackedUnpacked_conformant_array_schemaParserRuleCall_1_0 = (RuleCall)cUnpackedAssignment_1.eContents().get(0);
 		
 		//conformant_array_schema:
-		//	packed=packed_conformant_array_schema | unpacked=unpacked_conformant_array_schema;
+		//	packed=packed_conformant_array_schema
+		//	| unpacked=unpacked_conformant_array_schema;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//packed=packed_conformant_array_schema | unpacked=unpacked_conformant_array_schema
@@ -1104,7 +1106,9 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cGotoGoto_statementParserRuleCall_2_0 = (RuleCall)cGotoAssignment_2.eContents().get(0);
 		
 		//simple_statement:
-		//	(assignment=assignment_statement | function=function_designator | goto=goto_statement)?;
+		//	(assignment=assignment_statement
+		//	| function=function_designator
+		//	| goto=goto_statement)?;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//(assignment=assignment_statement | function=function_designator | goto=goto_statement)?
@@ -1195,14 +1199,14 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cWith_sttWith_statementParserRuleCall_3_0 = (RuleCall)cWith_sttAssignment_3.eContents().get(0);
 		
 		//structured_statement:
-		//	compound=compound_statement | repetitive=repetitive_statement | conditional=conditional_statement
-		//	// Para o escopo, somento condicional funciona
-		// | with_stt=with_statement;
+		//	compound=compound_statement
+		//	| repetitive=repetitive_statement
+		//	| conditional=conditional_statement // Para o escopo, somento condicional funciona
+		//	| with_stt=with_statement;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//compound=compound_statement | repetitive=repetitive_statement | conditional=conditional_statement
-		//// Para o escopo, somento condicional funciona
-		// | with_stt=with_statement
+		//compound=compound_statement | repetitive=repetitive_statement | conditional=conditional_statement // Para o escopo, somento condicional funciona
+		//| with_stt=with_statement
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//compound=compound_statement
@@ -1267,7 +1271,9 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cForFor_statementParserRuleCall_2_0 = (RuleCall)cForAssignment_2.eContents().get(0);
 		
 		//repetitive_statement:
-		//	while=while_statement | repeat=repeat_statement | for=for_statement;
+		//	while=while_statement
+		//	| repeat=repeat_statement
+		//	| for=for_statement;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//while=while_statement | repeat=repeat_statement | for=for_statement
@@ -1438,11 +1444,11 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//conditional_statement:
 		//	ifStmt=if_statement // Para o escopo, somente if then else
-		// | caseStmt=case_statement;
+		//	| caseStmt=case_statement;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//ifStmt=if_statement // Para o escopo, somente if then else
-		// | caseStmt=case_statement
+		//| caseStmt=case_statement
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//ifStmt=if_statement
@@ -1697,9 +1703,10 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cExpressionsSimple_expressionParserRuleCall_1_1_0 = (RuleCall)cExpressionsAssignment_1_1.eContents().get(0);
 		
 		//// Expressions
-		// expression:
-		//	expressions+=simple_expression ((operators+=RELATIONAL_OPERATOR | operators+="in" | operators+="=")
-		//	expressions+=simple_expression)?;
+		//expression:
+		//	expressions+=simple_expression ((operators+=RELATIONAL_OPERATOR
+		//	| operators+="in"
+		//	| operators+="=") expressions+=simple_expression)?;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//expressions+=simple_expression ((operators+=RELATIONAL_OPERATOR | operators+="in" | operators+="=")
@@ -1834,8 +1841,10 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cFactorsFactorParserRuleCall_1_1_0 = (RuleCall)cFactorsAssignment_1_1.eContents().get(0);
 		
 		//term:
-		//	factors+=factor ((operators+=MULTIPLICATION_OPERATOR | operators+="div" | operators+="mod" | operators+="and")
-		//	factors+=factor)*;
+		//	factors+=factor ((operators+=MULTIPLICATION_OPERATOR
+		//	| operators+="div"
+		//	| operators+="mod"
+		//	| operators+="and") factors+=factor)*;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//factors+=factor ((operators+=MULTIPLICATION_OPERATOR | operators+="div" | operators+="mod" | operators+="and")
@@ -1914,8 +1923,16 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cBooleanFalseKeyword_9_0 = (Keyword)cBooleanAssignment_9.eContents().get(0);
 		
 		//factor:
-		//	variable=variable | number=number | string=STRING | set=set | nil?="nil" | function=function_designator | "("
-		//	expression=expression ")" | "not" not=factor | boolean="true" | boolean="false";
+		//	variable=variable
+		//	| number=number
+		//	| string=STRING
+		//	| set=set
+		//	| nil?="nil"
+		//	| function=function_designator
+		//	| "(" expression=expression ")"
+		//	| "not" not=factor
+		//	| boolean="true"
+		//	| boolean="false";
 		@Override public ParserRule getRule() { return rule; }
 		
 		//variable=variable | number=number | string=STRING | set=set | nil?="nil" | function=function_designator | "("
@@ -2010,11 +2027,11 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		@Override public ParserRule getRule() { return rule; }
 		
 		//// Tem recursao à esquerda em component_variable
-		// name=ID variable=resto
+		//name=ID variable=resto
 		public Group getGroup() { return cGroup; }
 		
 		//// Tem recursao à esquerda em component_variable
-		// name=ID
+		//name=ID
 		public Assignment getNameAssignment_0() { return cNameAssignment_0; }
 		
 		//ID
@@ -2050,16 +2067,14 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//resto:
 		//	("[" expressions=expression_list "]" array=resto // component_variable 
-		// | accessor?="." name=ID variable=resto
-		//	//field_designator
-		// | "^" pointer=resto // file buffer
+		//	| accessor?="." name=ID variable=resto //field_designator
+		//	| "^" pointer=resto // file buffer
 		//)?;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//("[" expressions=expression_list "]" array=resto // component_variable 
-		// | accessor?="." name=ID variable=resto
-		////field_designator
-		// | "^" pointer=resto // file buffer
+		//| accessor?="." name=ID variable=resto //field_designator
+		//| "^" pointer=resto // file buffer
 		//)?
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
@@ -2234,8 +2249,10 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cPointerPointer_typeParserRuleCall_2_0 = (RuleCall)cPointerAssignment_2.eContents().get(0);
 		
 		//// Types
-		// type:
-		//	simple=simple_type | structured=structured_type | pointer=pointer_type;
+		//type:
+		//	simple=simple_type
+		//	| structured=structured_type
+		//	| pointer=pointer_type;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//simple=simple_type | structured=structured_type | pointer=pointer_type
@@ -2270,7 +2287,9 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cNameIDTerminalRuleCall_2_0 = (RuleCall)cNameAssignment_2.eContents().get(0);
 		
 		//simple_type:
-		//	subrange=subrange_type | enumerated=enumerated_type | name=ID;
+		//	subrange=subrange_type
+		//	| enumerated=enumerated_type
+		//	| name=ID;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//subrange=subrange_type | enumerated=enumerated_type | name=ID
@@ -2338,13 +2357,11 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//subrange_type:
 		//	initialConst=constant ".." finalConst=constant // lower e upper bonds levam a constantes, regra desnecessaria
-		// |
-		//	subrange=NUMERIC_SUBRANGE const=constant;
+		//	| subrange=NUMERIC_SUBRANGE const=constant;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//initialConst=constant ".." finalConst=constant // lower e upper bonds levam a constantes, regra desnecessaria
-		// |
-		//subrange=NUMERIC_SUBRANGE const=constant
+		//| subrange=NUMERIC_SUBRANGE const=constant
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//initialConst=constant ".." finalConst=constant
@@ -2420,7 +2437,10 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cFileFile_typeParserRuleCall_3_0 = (RuleCall)cFileAssignment_3.eContents().get(0);
 		
 		//unpacked_structured_type:
-		//	array=array_type | record=record_type | set=set_type | file=file_type;
+		//	array=array_type
+		//	| record=record_type
+		//	| set=set_type
+		//	| file=file_type;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//array=array_type | record=record_type | set=set_type | file=file_type
@@ -2467,17 +2487,15 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cTypeTypeParserRuleCall_6_0 = (RuleCall)cTypeAssignment_6.eContents().get(0);
 		
 		//array_type: //index_type leva a simple_type e element_type leva a type, regras desnecessarias
-		// "array" "["
-		//	indexes+=simple_type ("," indexes+=simple_type)* "]" "of" type=type;
+		//	"array" "[" indexes+=simple_type ("," indexes+=simple_type)* "]" "of" type=type;
 		@Override public ParserRule getRule() { return rule; }
 		
 		////index_type leva a simple_type e element_type leva a type, regras desnecessarias
-		// "array" "[" indexes+=simple_type (","
-		//indexes+=simple_type)* "]" "of" type=type
+		//"array" "[" indexes+=simple_type ("," indexes+=simple_type)* "]" "of" type=type
 		public Group getGroup() { return cGroup; }
 		
 		////index_type leva a simple_type e element_type leva a type, regras desnecessarias
-		// "array"
+		//"array"
 		public Keyword getArrayKeyword_0() { return cArrayKeyword_0; }
 		
 		//"["
@@ -2557,15 +2575,15 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cTypeTypeParserRuleCall_2_0 = (RuleCall)cTypeAssignment_2.eContents().get(0);
 		
 		//set_type: // base_type leva a type, regra desnecessaria
-		// "set" "of" type=type;
+		//	"set" "of" type=type;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//// base_type leva a type, regra desnecessaria
-		// "set" "of" type=type
+		//"set" "of" type=type
 		public Group getGroup() { return cGroup; }
 		
 		//// base_type leva a type, regra desnecessaria
-		// "set"
+		//"set"
 		public Keyword getSetKeyword_0() { return cSetKeyword_0; }
 		
 		//"of"
@@ -2586,15 +2604,15 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cTypeTypeParserRuleCall_2_0 = (RuleCall)cTypeAssignment_2.eContents().get(0);
 		
 		//file_type: // file_component_type leva a type, regra desnecessaria
-		// "file" "of" type=type;
+		//	"file" "of" type=type;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//// file_component_type leva a type, regra desnecessaria
-		// "file" "of" type=type
+		//"file" "of" type=type
 		public Group getGroup() { return cGroup; }
 		
 		//// file_component_type leva a type, regra desnecessaria
-		// "file"
+		//"file"
 		public Keyword getFileKeyword_0() { return cFileKeyword_0; }
 		
 		//"of"
@@ -2645,7 +2663,7 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cSemicolonKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		
 		//// Record Fields
-		// field_list:
+		//field_list:
 		//	(fixed=fixed_part (";" variants+=variant_part)? | variants+=variant_part) ";"?;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -2883,15 +2901,12 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cNamesIDTerminalRuleCall_1_1_0 = (RuleCall)cNamesAssignment_1_1.eContents().get(0);
 		
 		//// Input/Output
-		// // Pela gramatica nao existe nenhuma regra que leve até elas
-		// // Nunca sao chamadas
-		//
+		//// Pela gramatica nao existe nenhuma regra que leve até elas
+		//// Nunca sao chamadas
 		//// Variable and Identifier Categories
-		//
 		//// Quase todas podem utilizar o modelo default ID, as que nao ja estao dentro de outras regras
-		//
 		//// Low Level Definitions
-		// variable_identifier_list:
+		//variable_identifier_list:
 		//	names+=ID ("," names+=ID)*;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -2973,15 +2988,16 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cSigned_numberParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
 		//any_number:
-		//	unsigned_number | signed_number;
+		//	unsigned_number
+		//	| signed_number;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//// Numeros devem ser separados em com ou sem sinal
-		// unsigned_number | signed_number
+		//unsigned_number | signed_number
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//// Numeros devem ser separados em com ou sem sinal
-		// unsigned_number
+		//unsigned_number
 		public RuleCall getUnsigned_numberParserRuleCall_0() { return cUnsigned_numberParserRuleCall_0; }
 		
 		//signed_number
@@ -2996,15 +3012,16 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRealREAL_NUMBERTerminalRuleCall_1_0 = (RuleCall)cRealAssignment_1.eContents().get(0);
 		
 		//unsigned_number any_number:
-		//	integer=INTEGER_NUMBER | real=REAL_NUMBER;
+		//	integer=INTEGER_NUMBER
+		//	| real=REAL_NUMBER;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//// antes de serem separados em reais ou inteiros
-		// integer=INTEGER_NUMBER | real=REAL_NUMBER
+		//integer=INTEGER_NUMBER | real=REAL_NUMBER
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//// antes de serem separados em reais ou inteiros
-		// integer=INTEGER_NUMBER
+		//integer=INTEGER_NUMBER
 		public Assignment getIntegerAssignment_0() { return cIntegerAssignment_0; }
 		
 		//INTEGER_NUMBER
@@ -3025,7 +3042,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRealSIGNED_REAL_NUMBERTerminalRuleCall_1_0 = (RuleCall)cRealAssignment_1.eContents().get(0);
 		
 		//signed_number any_number:
-		//	integer=SIGNED_INTEGER_NUMBER | real=SIGNED_REAL_NUMBER;
+		//	integer=SIGNED_INTEGER_NUMBER
+		//	| real=SIGNED_REAL_NUMBER;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//integer=SIGNED_INTEGER_NUMBER | real=SIGNED_REAL_NUMBER
@@ -3052,7 +3070,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cNumberINTEGER_NUMBERTerminalRuleCall_1_0 = (RuleCall)cNumberAssignment_1.eContents().get(0);
 		
 		//label:
-		//	number=SIGNED_INTEGER_NUMBER | number=INTEGER_NUMBER;
+		//	number=SIGNED_INTEGER_NUMBER
+		//	| number=INTEGER_NUMBER;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//number=SIGNED_INTEGER_NUMBER | number=INTEGER_NUMBER
@@ -3091,8 +3110,11 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cNilNilKeyword_4_0 = (Keyword)cNilAssignment_4.eContents().get(0);
 		
 		//constant:
-		//	opterator=ADDITION_OPERATOR? (name=ID | number=number) | string=STRING | boolLiteral="true" | boolLiteral="false" |
-		//	nil="nil";
+		//	opterator=ADDITION_OPERATOR? (name=ID
+		//	| number=number) | string=STRING
+		//	| boolLiteral="true"
+		//	| boolLiteral="false"
+		//	| nil="nil";
 		@Override public ParserRule getRule() { return rule; }
 		
 		//opterator=ADDITION_OPERATOR? (name=ID | number=number) | string=STRING | boolLiteral="true" | boolLiteral="false" |
@@ -3154,7 +3176,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cFunction_declarationParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
 		//abstraction_declaration:
-		//	procedure_declaration | function_declaration;
+		//	procedure_declaration
+		//	| function_declaration;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//procedure_declaration | function_declaration
@@ -3173,7 +3196,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cFunction_headingParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
 		//abstraction_heading:
-		//	procedure_heading | function_heading;
+		//	procedure_heading
+		//	| function_heading;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//procedure_heading | function_heading
@@ -3407,7 +3431,7 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 
 	
 	////Programs and Blocks
-	// program:
+	//program:
 	//	heading=program_heading block=block ".";
 	public ProgramElements getProgramAccess() {
 		return pProgram;
@@ -3418,8 +3442,7 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//program_heading: //Pelo que vi de programas pascal, (identifier_list) é opcional.
-	// "program" name=ID ("("
-	//	identifiers=identifier_list ")")? ";";
+	//	"program" name=ID ("(" identifiers=identifier_list ")")? ";";
 	public Program_headingElements getProgram_headingAccess() {
 		return pProgram_heading;
 	}
@@ -3439,8 +3462,11 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//declaration_part:
-	//	label_decl=label_declaration_part? constant_def=constant_definition_part? type_def=type_definition_part?
-	//	variable_decl=variable_declaration_part? abstraction=procedure_and_function_declaration_part?;
+	//	label_decl=label_declaration_part?
+	//	constant_def=constant_definition_part?
+	//	type_def=type_definition_part?
+	//	variable_decl=variable_declaration_part?
+	//	abstraction=procedure_and_function_declaration_part?;
 	public Declaration_partElements getDeclaration_partAccess() {
 		return pDeclaration_part;
 	}
@@ -3560,7 +3586,7 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//// Procedures and Function Definitions
-	// procedure_heading abstraction_heading:
+	//procedure_heading abstraction_heading:
 	//	"procedure" name=ID parameters=formal_parameter_list?;
 	public Procedure_headingElements getProcedure_headingAccess() {
 		return pProcedure_heading;
@@ -3591,10 +3617,10 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//formal_parameter_section:
-	//	value=value_parameter_section | variable=variable_parameter_section | procedure=procedure_heading
-	//	//procedure-parameter-section e function leval direto aos heading
-	// | function=function_heading
-	//	//desnecessario colocar essas duas regras.
+	//	value=value_parameter_section
+	//	| variable=variable_parameter_section
+	//	| procedure=procedure_heading //procedure-parameter-section e function leval direto aos heading
+	//	| function=function_heading //desnecessario colocar essas duas regras.
 	//;
 	public Formal_parameter_sectionElements getFormal_parameter_sectionAccess() {
 		return pFormal_parameter_section;
@@ -3625,7 +3651,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//parameter_type:
-	//	name=ID | array=conformant_array_schema;
+	//	name=ID
+	//	| array=conformant_array_schema;
 	public Parameter_typeElements getParameter_typeAccess() {
 		return pParameter_type;
 	}
@@ -3635,7 +3662,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//conformant_array_schema:
-	//	packed=packed_conformant_array_schema | unpacked=unpacked_conformant_array_schema;
+	//	packed=packed_conformant_array_schema
+	//	| unpacked=unpacked_conformant_array_schema;
 	public Conformant_array_schemaElements getConformant_array_schemaAccess() {
 		return pConformant_array_schema;
 	}
@@ -3696,7 +3724,9 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//simple_statement:
-	//	(assignment=assignment_statement | function=function_designator | goto=goto_statement)?;
+	//	(assignment=assignment_statement
+	//	| function=function_designator
+	//	| goto=goto_statement)?;
 	public Simple_statementElements getSimple_statementAccess() {
 		return pSimple_statement;
 	}
@@ -3726,9 +3756,10 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//structured_statement:
-	//	compound=compound_statement | repetitive=repetitive_statement | conditional=conditional_statement
-	//	// Para o escopo, somento condicional funciona
-	// | with_stt=with_statement;
+	//	compound=compound_statement
+	//	| repetitive=repetitive_statement
+	//	| conditional=conditional_statement // Para o escopo, somento condicional funciona
+	//	| with_stt=with_statement;
 	public Structured_statementElements getStructured_statementAccess() {
 		return pStructured_statement;
 	}
@@ -3748,7 +3779,9 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//repetitive_statement:
-	//	while=while_statement | repeat=repeat_statement | for=for_statement;
+	//	while=while_statement
+	//	| repeat=repeat_statement
+	//	| for=for_statement;
 	public Repetitive_statementElements getRepetitive_statementAccess() {
 		return pRepetitive_statement;
 	}
@@ -3789,7 +3822,7 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//conditional_statement:
 	//	ifStmt=if_statement // Para o escopo, somente if then else
-	// | caseStmt=case_statement;
+	//	| caseStmt=case_statement;
 	public Conditional_statementElements getConditional_statementAccess() {
 		return pConditional_statement;
 	}
@@ -3849,9 +3882,10 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//// Expressions
-	// expression:
-	//	expressions+=simple_expression ((operators+=RELATIONAL_OPERATOR | operators+="in" | operators+="=")
-	//	expressions+=simple_expression)?;
+	//expression:
+	//	expressions+=simple_expression ((operators+=RELATIONAL_OPERATOR
+	//	| operators+="in"
+	//	| operators+="=") expressions+=simple_expression)?;
 	public ExpressionElements getExpressionAccess() {
 		return pExpression;
 	}
@@ -3872,8 +3906,10 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//term:
-	//	factors+=factor ((operators+=MULTIPLICATION_OPERATOR | operators+="div" | operators+="mod" | operators+="and")
-	//	factors+=factor)*;
+	//	factors+=factor ((operators+=MULTIPLICATION_OPERATOR
+	//	| operators+="div"
+	//	| operators+="mod"
+	//	| operators+="and") factors+=factor)*;
 	public TermElements getTermAccess() {
 		return pTerm;
 	}
@@ -3883,8 +3919,16 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//factor:
-	//	variable=variable | number=number | string=STRING | set=set | nil?="nil" | function=function_designator | "("
-	//	expression=expression ")" | "not" not=factor | boolean="true" | boolean="false";
+	//	variable=variable
+	//	| number=number
+	//	| string=STRING
+	//	| set=set
+	//	| nil?="nil"
+	//	| function=function_designator
+	//	| "(" expression=expression ")"
+	//	| "not" not=factor
+	//	| boolean="true"
+	//	| boolean="false";
 	public FactorElements getFactorAccess() {
 		return pFactor;
 	}
@@ -3923,9 +3967,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//resto:
 	//	("[" expressions=expression_list "]" array=resto // component_variable 
-	// | accessor?="." name=ID variable=resto
-	//	//field_designator
-	// | "^" pointer=resto // file buffer
+	//	| accessor?="." name=ID variable=resto //field_designator
+	//	| "^" pointer=resto // file buffer
 	//)?;
 	public RestoElements getRestoAccess() {
 		return pResto;
@@ -3967,8 +4010,10 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//// Types
-	// type:
-	//	simple=simple_type | structured=structured_type | pointer=pointer_type;
+	//type:
+	//	simple=simple_type
+	//	| structured=structured_type
+	//	| pointer=pointer_type;
 	public TypeElements getTypeAccess() {
 		return pType;
 	}
@@ -3978,7 +4023,9 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//simple_type:
-	//	subrange=subrange_type | enumerated=enumerated_type | name=ID;
+	//	subrange=subrange_type
+	//	| enumerated=enumerated_type
+	//	| name=ID;
 	public Simple_typeElements getSimple_typeAccess() {
 		return pSimple_type;
 	}
@@ -3999,8 +4046,7 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//subrange_type:
 	//	initialConst=constant ".." finalConst=constant // lower e upper bonds levam a constantes, regra desnecessaria
-	// |
-	//	subrange=NUMERIC_SUBRANGE const=constant;
+	//	| subrange=NUMERIC_SUBRANGE const=constant;
 	public Subrange_typeElements getSubrange_typeAccess() {
 		return pSubrange_type;
 	}
@@ -4020,7 +4066,10 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//unpacked_structured_type:
-	//	array=array_type | record=record_type | set=set_type | file=file_type;
+	//	array=array_type
+	//	| record=record_type
+	//	| set=set_type
+	//	| file=file_type;
 	public Unpacked_structured_typeElements getUnpacked_structured_typeAccess() {
 		return pUnpacked_structured_type;
 	}
@@ -4030,8 +4079,7 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//array_type: //index_type leva a simple_type e element_type leva a type, regras desnecessarias
-	// "array" "["
-	//	indexes+=simple_type ("," indexes+=simple_type)* "]" "of" type=type;
+	//	"array" "[" indexes+=simple_type ("," indexes+=simple_type)* "]" "of" type=type;
 	public Array_typeElements getArray_typeAccess() {
 		return pArray_type;
 	}
@@ -4051,7 +4099,7 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//set_type: // base_type leva a type, regra desnecessaria
-	// "set" "of" type=type;
+	//	"set" "of" type=type;
 	public Set_typeElements getSet_typeAccess() {
 		return pSet_type;
 	}
@@ -4061,7 +4109,7 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//file_type: // file_component_type leva a type, regra desnecessaria
-	// "file" "of" type=type;
+	//	"file" "of" type=type;
 	public File_typeElements getFile_typeAccess() {
 		return pFile_type;
 	}
@@ -4081,7 +4129,7 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//// Record Fields
-	// field_list:
+	//field_list:
 	//	(fixed=fixed_part (";" variants+=variant_part)? | variants+=variant_part) ";"?;
 	public Field_listElements getField_listAccess() {
 		return pField_list;
@@ -4142,15 +4190,12 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//// Input/Output
-	// // Pela gramatica nao existe nenhuma regra que leve até elas
-	// // Nunca sao chamadas
-	//
+	//// Pela gramatica nao existe nenhuma regra que leve até elas
+	//// Nunca sao chamadas
 	//// Variable and Identifier Categories
-	//
 	//// Quase todas podem utilizar o modelo default ID, as que nao ja estao dentro de outras regras
-	//
 	//// Low Level Definitions
-	// variable_identifier_list:
+	//variable_identifier_list:
 	//	names+=ID ("," names+=ID)*;
 	public Variable_identifier_listElements getVariable_identifier_listAccess() {
 		return pVariable_identifier_list;
@@ -4181,7 +4226,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//any_number:
-	//	unsigned_number | signed_number;
+	//	unsigned_number
+	//	| signed_number;
 	public Any_numberElements getAny_numberAccess() {
 		return pAny_number;
 	}
@@ -4191,7 +4237,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//unsigned_number any_number:
-	//	integer=INTEGER_NUMBER | real=REAL_NUMBER;
+	//	integer=INTEGER_NUMBER
+	//	| real=REAL_NUMBER;
 	public Unsigned_numberElements getUnsigned_numberAccess() {
 		return pUnsigned_number;
 	}
@@ -4201,7 +4248,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//signed_number any_number:
-	//	integer=SIGNED_INTEGER_NUMBER | real=SIGNED_REAL_NUMBER;
+	//	integer=SIGNED_INTEGER_NUMBER
+	//	| real=SIGNED_REAL_NUMBER;
 	public Signed_numberElements getSigned_numberAccess() {
 		return pSigned_number;
 	}
@@ -4217,8 +4265,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//terminal REAL_NUMBER:
-	//	UNSIGNED_DIGIT_SEQUENCE "." UNSIGNED_DIGIT_SEQUENCE? (("E" | "e") DIGIT_SEQUENCE)? | UNSIGNED_DIGIT_SEQUENCE ("E" |
-	//	"e") DIGIT_SEQUENCE;
+	//	UNSIGNED_DIGIT_SEQUENCE "." UNSIGNED_DIGIT_SEQUENCE? (("E" | "e") DIGIT_SEQUENCE)?
+	//	| UNSIGNED_DIGIT_SEQUENCE ("E" | "e") DIGIT_SEQUENCE;
 	public TerminalRule getREAL_NUMBERRule() {
 		return tREAL_NUMBER;
 	}
@@ -4242,7 +4290,10 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//terminal NUMERIC_SUBRANGE:
-	//	(INTEGER_NUMBER | REAL_NUMBER | SIGNED_INTEGER_NUMBER | SIGNED_REAL_NUMBER) "..";
+	//	(INTEGER_NUMBER
+	//	| REAL_NUMBER
+	//	| SIGNED_INTEGER_NUMBER
+	//	| SIGNED_REAL_NUMBER) "..";
 	public TerminalRule getNUMERIC_SUBRANGERule() {
 		return tNUMERIC_SUBRANGE;
 	}
@@ -4260,7 +4311,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//label:
-	//	number=SIGNED_INTEGER_NUMBER | number=INTEGER_NUMBER;
+	//	number=SIGNED_INTEGER_NUMBER
+	//	| number=INTEGER_NUMBER;
 	public LabelElements getLabelAccess() {
 		return pLabel;
 	}
@@ -4270,8 +4322,11 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//constant:
-	//	opterator=ADDITION_OPERATOR? (name=ID | number=number) | string=STRING | boolLiteral="true" | boolLiteral="false" |
-	//	nil="nil";
+	//	opterator=ADDITION_OPERATOR? (name=ID
+	//	| number=number) | string=STRING
+	//	| boolLiteral="true"
+	//	| boolLiteral="false"
+	//	| nil="nil";
 	public ConstantElements getConstantAccess() {
 		return pConstant;
 	}
@@ -4281,7 +4336,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//abstraction_declaration:
-	//	procedure_declaration | function_declaration;
+	//	procedure_declaration
+	//	| function_declaration;
 	public Abstraction_declarationElements getAbstraction_declarationAccess() {
 		return pAbstraction_declaration;
 	}
@@ -4291,7 +4347,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//abstraction_heading:
-	//	procedure_heading | function_heading;
+	//	procedure_heading
+	//	| function_heading;
 	public Abstraction_headingElements getAbstraction_headingAccess() {
 		return pAbstraction_heading;
 	}

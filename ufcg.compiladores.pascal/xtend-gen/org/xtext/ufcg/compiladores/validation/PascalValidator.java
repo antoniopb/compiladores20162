@@ -144,17 +144,51 @@ public class PascalValidator extends AbstractPascalValidator {
   
   private final Map<block, Set<Variable>> variaveis = new AdaptativeHashMap<block, Variable>();
   
-  private final Map<block, Set<Procedure>> procedimentos = new AdaptativeHashMap<block, Procedure>(APIProvider.procedures);
+  private final Map<block, Set<Procedure>> procedures = new AdaptativeHashMap<block, Procedure>(APIProvider.procedures);
   
-  private final Map<EObject, Set<org.xtext.ufcg.compiladores.validation.Error>> mapaDeErros = new AdaptativeHashMap<EObject, org.xtext.ufcg.compiladores.validation.Error>();
+  private final Map<EObject, Set<org.xtext.ufcg.compiladores.validation.Error>> listaDeErrors = new AdaptativeHashMap<EObject, org.xtext.ufcg.compiladores.validation.Error>();
   
-  private final Map<block, Set<Type>> mapaDeTipos = new AdaptativeHashMap<block, Type>(APIProvider.types);
+  private final Map<block, Set<Type>> tipos = new AdaptativeHashMap<block, Type>(APIProvider.types);
   
-  private final Map<EObject, Type> mapaDeComparacoes = new HashMap<EObject, Type>();
+  private final Map<EObject, Type> comparacoes = new HashMap<EObject, Type>();
   
-  public static <T extends Element> T search(final Set<T> listagem, final T alvo) {
-    for (final T elemento : listagem) {
-      boolean _equals = elemento.equals(alvo);
+  @Check
+  public Object preencherTabela(final program prog) {
+    Object _xblockexpression = null;
+    {
+      String name = prog.getHeading().getName();
+      Object _xifexpression = null;
+      boolean _containsKey = PascalValidator.tabela_de_simbolos.containsKey(name);
+      boolean _not = (!_containsKey);
+      if (_not) {
+        Object _xblockexpression_1 = null;
+        {
+          HashMap<String, Object> _hashMap = new HashMap<String, Object>();
+          PascalValidator.tabela_de_simbolos.put(name, _hashMap);
+          PascalValidator.tabela_de_simbolos.get(name).put("variables", this.variaveis);
+          PascalValidator.tabela_de_simbolos.get(name).put("abstractions", this.procedures);
+          PascalValidator.tabela_de_simbolos.get(name).put("types", this.tipos);
+          _xblockexpression_1 = PascalValidator.tabela_de_simbolos.get(name).put("calculatedTypes", this.comparacoes);
+        }
+        _xifexpression = _xblockexpression_1;
+      }
+      _xblockexpression = _xifexpression;
+    }
+    return _xblockexpression;
+  }
+  
+  @Check
+  public void iniciarChecks(final block b) {
+    this.checkTypeRedeclaration(b);
+    this.checkAbstractionRedeclaration(b);
+    this.checkConstantRedeclaration(b);
+    this.checkVariableRedeclaration(b);
+    this.checkBlock(b);
+  }
+  
+  public static <T extends Element> T search(final Set<T> elements, final T key) {
+    for (final T elemento : elements) {
+      boolean _equals = elemento.equals(key);
       if (_equals) {
         return elemento;
       }
@@ -162,15 +196,15 @@ public class PascalValidator extends AbstractPascalValidator {
     return null;
   }
   
-  public static Procedure searchWithTypeCoersion(final Set<Procedure> listagem, final Procedure alvo) {
+  public static Procedure searchWithTypeCoersion(final Set<Procedure> elements, final Procedure key) {
     Procedure optimal = null;
-    for (final Procedure procedimento : listagem) {
+    for (final Procedure procedimento : elements) {
       {
-        boolean _equals = procedimento.equals(alvo);
+        boolean _equals = procedimento.equals(key);
         if (_equals) {
           return procedimento;
         }
-        boolean _equalsWithTypeCoersion = procedimento.equalsWithTypeCoersion(alvo);
+        boolean _equalsWithTypeCoersion = procedimento.equalsWithTypeCoersion(key);
         if (_equalsWithTypeCoersion) {
           optimal = procedimento;
         }
@@ -179,9 +213,9 @@ public class PascalValidator extends AbstractPascalValidator {
     return optimal;
   }
   
-  public static Type searchByName(final Set<Type> listagem, final Type alvo) {
-    for (final Type tipo : listagem) {
-      boolean _equals = tipo.name.toLowerCase().equals(alvo.name.toLowerCase());
+  public static Type searchByName(final Set<Type> types, final Type key) {
+    for (final Type tipo : types) {
+      boolean _equals = tipo.name.toLowerCase().equals(key.name.toLowerCase());
       if (_equals) {
         return tipo;
       }
@@ -189,95 +223,82 @@ public class PascalValidator extends AbstractPascalValidator {
     return null;
   }
   
-  public boolean insertError(final EObject objeto, final String messagem, final ErrorType tipeErro, final EStructuralFeature feature) {
-    Set<org.xtext.ufcg.compiladores.validation.Error> _get = this.mapaDeErros.get(objeto);
-    org.xtext.ufcg.compiladores.validation.Error _error = new org.xtext.ufcg.compiladores.validation.Error(messagem, tipeErro, feature);
-    return _get.add(_error);
-  }
-  
-  public void removeError(final EObject objeto, final ErrorType tipeErro) {
-    Set<org.xtext.ufcg.compiladores.validation.Error> _get = this.mapaDeErros.get(objeto);
-    org.xtext.ufcg.compiladores.validation.Error _error = new org.xtext.ufcg.compiladores.validation.Error(tipeErro);
-    _get.remove(_error);
-    this.showError(objeto);
-  }
-  
-  public <T extends Element> Set<T> clear(final block bloco, final ElementType tipo, final Map<block, Set<T>> container) {
+  public <T extends Element> Set<T> clear(final block b, final ElementType type, final Map<block, Set<T>> container) {
     Set<T> _xblockexpression = null;
     {
       AdaptativeTreeSet<T> newSet = new AdaptativeTreeSet<T>();
-      Set<T> _get = container.get(bloco);
-      for (final T elemento : _get) {
-        if (((!Objects.equal(elemento.type, tipo)) || elemento.isInherited())) {
-          newSet.add(elemento);
+      Set<T> _get = container.get(b);
+      for (final T element : _get) {
+        if (((!Objects.equal(element.type, type)) || element.isInherited())) {
+          newSet.add(element);
         }
       }
-      _xblockexpression = container.put(bloco, newSet);
+      _xblockexpression = container.put(b, newSet);
     }
     return _xblockexpression;
   }
   
-  public ArrayList<Variable> getParameters(final block bloco, final function_designator designator) {
-    ArrayList<Variable> parametros = new ArrayList<Variable>();
-    expression_list _expressions = designator.getExpressions();
+  public ArrayList<Variable> getParameters(final block b, final function_designator f) {
+    ArrayList<Variable> parameters = new ArrayList<Variable>();
+    expression_list _expressions = f.getExpressions();
     boolean _notEquals = (!Objects.equal(_expressions, null));
     if (_notEquals) {
       int count = 0;
-      EList<expression> _expressions_1 = designator.getExpressions().getExpressions();
+      EList<expression> _expressions_1 = f.getExpressions().getExpressions();
       for (final expression expr : _expressions_1) {
         {
-          Type _type = this.getType(bloco, expr);
-          Variable _variable = new Variable(("arg_" + Integer.valueOf(count)), _type, false, bloco, ElementType.PARAMETER);
-          parametros.add(_variable);
+          Type _type = this.getType(b, expr);
+          Variable _variable = new Variable(("arg_" + Integer.valueOf(count)), _type, false, b, ElementType.PARAMETER);
+          parameters.add(_variable);
           count++;
         }
       }
     }
-    return parametros;
+    return parameters;
   }
   
-  public Procedure getAbstraction(final block bloco, final function_designator designator) {
-    String nome = designator.getName();
-    ArrayList<Variable> parametross = this.getParameters(bloco, designator);
-    return new Procedure(nome, parametross);
+  public Procedure getAbstraction(final block b, final function_designator f) {
+    String name = f.getName();
+    ArrayList<Variable> parameters = this.getParameters(b, f);
+    return new Procedure(name, parameters);
   }
   
-  public String getRealType(final block bloco, final String tipo) {
-    Set<Type> _get = this.mapaDeTipos.get(bloco);
-    Type _type = new Type(tipo);
-    Type tipoEncontrado = PascalValidator.<Type>search(_get, _type);
-    boolean _notEquals = (!Objects.equal(tipoEncontrado, null));
+  public String getRealType(final block b, final String type) {
+    Set<Type> _get = this.tipos.get(b);
+    Type _type = new Type(type);
+    Type foundType = PascalValidator.<Type>search(_get, _type);
+    boolean _notEquals = (!Objects.equal(foundType, null));
     if (_notEquals) {
-      return tipoEncontrado.getRealType();
+      return foundType.getRealType();
     }
-    return tipo;
+    return type;
   }
   
-  public Type getType(final block bloco, final String tipo) {
-    boolean _equals = Objects.equal(tipo, null);
+  public Type getType(final block b, final String type) {
+    boolean _equals = Objects.equal(type, null);
     if (_equals) {
       return null;
     }
-    if (((tipo.length() > 1) && tipo.substring(0, 1).equals(this.POINTER))) {
-      Type _type = this.getType(bloco, tipo.substring(1));
+    if (((type.length() > 1) && type.substring(0, 1).equals(this.POINTER))) {
+      Type _type = this.getType(b, type.substring(1));
       return new ComposedType(_type, ComposedTypeKind.POINTER);
     } else {
-      if (((tipo.length() > 9) && tipo.substring(0, 9).equals(this.ARRAY))) {
-        Type _type_1 = this.getType(bloco, tipo.substring(9));
+      if (((type.length() > 9) && type.substring(0, 9).equals(this.ARRAY))) {
+        Type _type_1 = this.getType(b, type.substring(9));
         return new ComposedType(_type_1, ComposedTypeKind.ARRAY);
       }
     }
-    String _realType = this.getRealType(bloco, tipo);
-    return new Type(tipo, false, _realType);
+    String _realType = this.getRealType(b, type);
+    return new Type(type, false, _realType);
   }
   
-  public Type getComposedType(final block bloco, final String tipo, final ComposedTypeKind kind) {
-    Type _type = this.getType(bloco, tipo);
+  public Type getComposedType(final block b, final String type, final ComposedTypeKind kind) {
+    Type _type = this.getType(b, type);
     return new ComposedType(_type, kind);
   }
   
   public Type getType(final block bloco, final constant constante) {
-    Type paraRetornar = new Type(this.NIL);
+    Type returnType = new Type(this.NIL);
     String _name = constante.getName();
     boolean _notEquals = (!Objects.equal(_name, null));
     if (_notEquals) {
@@ -287,7 +308,7 @@ public class PascalValidator extends AbstractPascalValidator {
       Variable varFound = PascalValidator.<Variable>search(_get, _variable);
       boolean _notEquals_1 = (!Objects.equal(varFound, null));
       if (_notEquals_1) {
-        paraRetornar = varFound.getVarType();
+        returnType = varFound.getVarType();
       }
     } else {
       String _string = constante.getString();
@@ -295,19 +316,19 @@ public class PascalValidator extends AbstractPascalValidator {
       if (_notEquals_2) {
         Type _type = new Type(this.CHAR);
         ComposedType _composedType = new ComposedType(_type, ComposedTypeKind.ARRAY);
-        paraRetornar = _composedType;
+        returnType = _composedType;
       } else {
         String _boolLiteral = constante.getBoolLiteral();
         boolean _notEquals_3 = (!Objects.equal(_boolLiteral, null));
         if (_notEquals_3) {
           Type _type_1 = new Type(this.BOOLEAN);
-          paraRetornar = _type_1;
+          returnType = _type_1;
         } else {
           String _nil = constante.getNil();
           boolean _notEquals_4 = (!Objects.equal(_nil, null));
           if (_notEquals_4) {
             Type _type_2 = new Type(this.NIL);
-            paraRetornar = _type_2;
+            returnType = _type_2;
           } else {
             number _number = constante.getNumber();
             boolean _notEquals_5 = (!Objects.equal(_number, null));
@@ -316,13 +337,13 @@ public class PascalValidator extends AbstractPascalValidator {
               boolean _notEquals_6 = (!Objects.equal(_integer, null));
               if (_notEquals_6) {
                 Type _type_3 = new Type(this.INTEGER);
-                paraRetornar = _type_3;
+                returnType = _type_3;
               } else {
                 String _real = constante.getNumber().getNumber().getReal();
                 boolean _notEquals_7 = (!Objects.equal(_real, null));
                 if (_notEquals_7) {
                   Type _type_4 = new Type(this.REAL);
-                  paraRetornar = _type_4;
+                  returnType = _type_4;
                 }
               }
             }
@@ -330,146 +351,146 @@ public class PascalValidator extends AbstractPascalValidator {
         }
       }
     }
-    return paraRetornar;
+    return returnType;
   }
   
-  public Type getType(final block bloco, final parameter_type tipo) {
-    Type paraRetornar = new Type(this.NIL);
-    conformant_array_schema _array = tipo.getArray();
+  public Type getType(final block b, final parameter_type type) {
+    Type returnType = new Type(this.NIL);
+    conformant_array_schema _array = type.getArray();
     boolean _notEquals = (!Objects.equal(_array, null));
     if (_notEquals) {
-      conformant_array_schema array = tipo.getArray();
+      conformant_array_schema array = type.getArray();
       packed_conformant_array_schema _packed = array.getPacked();
       boolean _notEquals_1 = (!Objects.equal(_packed, null));
       if (_notEquals_1) {
-        Type _type = this.getType(bloco, array.getPacked().getName());
+        Type _type = this.getType(b, array.getPacked().getName());
         ComposedType _composedType = new ComposedType(_type, ComposedTypeKind.ARRAY);
-        paraRetornar = _composedType;
+        returnType = _composedType;
       } else {
         unpacked_conformant_array_schema _unpacked = array.getUnpacked();
         boolean _notEquals_2 = (!Objects.equal(_unpacked, null));
         if (_notEquals_2) {
-          Type _type_1 = this.getType(bloco, array.getUnpacked().getType());
+          Type _type_1 = this.getType(b, array.getUnpacked().getType());
           ComposedType _composedType_1 = new ComposedType(_type_1, ComposedTypeKind.ARRAY);
-          paraRetornar = _composedType_1;
+          returnType = _composedType_1;
         }
       }
     } else {
-      String _name = tipo.getName();
+      String _name = type.getName();
       boolean _notEquals_3 = (!Objects.equal(_name, null));
       if (_notEquals_3) {
-        Set<Type> _get = this.mapaDeTipos.get(bloco);
-        String _name_1 = tipo.getName();
+        Set<Type> _get = this.tipos.get(b);
+        String _name_1 = type.getName();
         Type _type_2 = new Type(_name_1);
         Type _search = PascalValidator.<Type>search(_get, _type_2);
         boolean _equals = Objects.equal(_search, null);
         if (_equals) {
-          this.insertError(tipo, this.UNDEFINED_TYPE_MESSAGE, ErrorType.UNDEFINED_TYPE, PascalPackage.Literals.PARAMETER_TYPE__NAME);
+          this.insertError(type, this.UNDEFINED_TYPE_MESSAGE, ErrorType.UNDEFINED_TYPE, PascalPackage.Literals.PARAMETER_TYPE__NAME);
         } else {
-          this.removeError(tipo, ErrorType.UNDEFINED_TYPE);
+          this.removeError(type, ErrorType.UNDEFINED_TYPE);
         }
-        paraRetornar = this.getType(bloco, tipo.getName());
+        returnType = this.getType(b, type.getName());
       }
     }
-    return paraRetornar;
+    return returnType;
   }
   
-  public Type getType(final block bloco, final type tipo) {
-    Type paraRetornar = new Type(this.NIL);
-    simple_type _simple = tipo.getSimple();
+  public Type getType(final block b, final type type) {
+    Type returnType = new Type(this.NIL);
+    simple_type _simple = type.getSimple();
     boolean _notEquals = (!Objects.equal(_simple, null));
     if (_notEquals) {
-      simple_type simple = tipo.getSimple();
+      simple_type simple = type.getSimple();
       if (((!Objects.equal(simple.getSubrange(), null)) || (!Objects.equal(simple.getEnumerated(), null)))) {
         Type _type = new Type("enumerated", false, "...enumerated");
-        paraRetornar = _type;
+        returnType = _type;
       } else {
         String _name = simple.getName();
         boolean _notEquals_1 = (!Objects.equal(_name, null));
         if (_notEquals_1) {
-          Set<Type> _get = this.mapaDeTipos.get(bloco);
+          Set<Type> _get = this.tipos.get(b);
           String _name_1 = simple.getName();
           Type _type_1 = new Type(_name_1);
           Type _search = PascalValidator.<Type>search(_get, _type_1);
           boolean _equals = Objects.equal(_search, null);
           if (_equals) {
-            this.insertError(tipo, this.UNDEFINED_TYPE_MESSAGE, ErrorType.UNDEFINED_TYPE, PascalPackage.Literals.TYPE__SIMPLE);
+            this.insertError(type, this.UNDEFINED_TYPE_MESSAGE, ErrorType.UNDEFINED_TYPE, PascalPackage.Literals.TYPE__SIMPLE);
           } else {
-            this.removeError(tipo, ErrorType.UNDEFINED_TYPE);
+            this.removeError(type, ErrorType.UNDEFINED_TYPE);
           }
-          paraRetornar = this.getType(bloco, simple.getName());
+          returnType = this.getType(b, simple.getName());
         }
       }
     } else {
-      structured_type _structured = tipo.getStructured();
+      structured_type _structured = type.getStructured();
       boolean _notEquals_2 = (!Objects.equal(_structured, null));
       if (_notEquals_2) {
-        structured_type structured = tipo.getStructured();
+        structured_type structured = type.getStructured();
         unpacked_structured_type unpacked = structured.getType();
         array_type _array = unpacked.getArray();
         boolean _notEquals_3 = (!Objects.equal(_array, null));
         if (_notEquals_3) {
-          Type _type_2 = this.getType(bloco, unpacked.getArray().getType());
+          Type _type_2 = this.getType(b, unpacked.getArray().getType());
           ComposedType _composedType = new ComposedType(_type_2, ComposedTypeKind.ARRAY);
-          paraRetornar = _composedType;
+          returnType = _composedType;
         } else {
           record_type _record = unpacked.getRecord();
           boolean _notEquals_4 = (!Objects.equal(_record, null));
           if (_notEquals_4) {
             Type _type_3 = new Type(this.RECORD);
-            paraRetornar = _type_3;
+            returnType = _type_3;
           } else {
             set_type _set = unpacked.getSet();
             boolean _notEquals_5 = (!Objects.equal(_set, null));
             if (_notEquals_5) {
-              paraRetornar = this.getType(bloco, unpacked.getSet().getType());
+              returnType = this.getType(b, unpacked.getSet().getType());
             } else {
               file_type _file = unpacked.getFile();
               boolean _notEquals_6 = (!Objects.equal(_file, null));
               if (_notEquals_6) {
-                paraRetornar = this.getType(bloco, unpacked.getFile().getType());
+                returnType = this.getType(b, unpacked.getFile().getType());
               }
             }
           }
         }
       } else {
-        pointer_type _pointer = tipo.getPointer();
+        pointer_type _pointer = type.getPointer();
         boolean _notEquals_7 = (!Objects.equal(_pointer, null));
         if (_notEquals_7) {
-          Type _type_4 = this.getType(bloco, tipo.getPointer().getType());
+          Type _type_4 = this.getType(b, type.getPointer().getType());
           ComposedType _composedType_1 = new ComposedType(_type_4, ComposedTypeKind.POINTER);
-          paraRetornar = _composedType_1;
+          returnType = _composedType_1;
         }
       }
     }
-    return paraRetornar;
+    return returnType;
   }
   
   public Type getType(final block bloco, final variable variavel) {
-    Type paraRetornar = new Type(this.NIL);
+    Type returnType = new Type(this.NIL);
     Set<Variable> _get = this.variaveis.get(bloco);
     String _name = variavel.getName();
     Variable _variable = new Variable(_name);
-    Variable resultadoBusca = PascalValidator.<Variable>search(_get, _variable);
-    boolean _notEquals = (!Objects.equal(resultadoBusca, null));
+    Variable variableFound = PascalValidator.<Variable>search(_get, _variable);
+    boolean _notEquals = (!Objects.equal(variableFound, null));
     if (_notEquals) {
-      paraRetornar = resultadoBusca.getVarType();
+      returnType = variableFound.getVarType();
     }
-    return paraRetornar;
+    return returnType;
   }
   
   public Type getType(final block bloco, final factor fator) {
-    Type paraRetornar = new Type(this.NIL);
+    Type returnType = new Type(this.NIL);
     variable _variable = fator.getVariable();
     boolean _notEquals = (!Objects.equal(_variable, null));
     if (_notEquals) {
       Set<Variable> _get = this.variaveis.get(bloco);
       String _name = fator.getVariable().getName();
       Variable _variable_1 = new Variable(_name);
-      Variable resultadoBusca = PascalValidator.<Variable>search(_get, _variable_1);
-      boolean _notEquals_1 = (!Objects.equal(resultadoBusca, null));
+      Variable variableFound = PascalValidator.<Variable>search(_get, _variable_1);
+      boolean _notEquals_1 = (!Objects.equal(variableFound, null));
       if (_notEquals_1) {
-        paraRetornar = resultadoBusca.getVarType();
+        returnType = variableFound.getVarType();
       }
     } else {
       number _number = fator.getNumber();
@@ -480,13 +501,13 @@ public class PascalValidator extends AbstractPascalValidator {
         boolean _notEquals_3 = (!Objects.equal(_integer, null));
         if (_notEquals_3) {
           Type _type = new Type(this.INTEGER);
-          paraRetornar = _type;
+          returnType = _type;
         } else {
           String _real = number.getReal();
           boolean _notEquals_4 = (!Objects.equal(_real, null));
           if (_notEquals_4) {
             Type _type_1 = new Type(this.REAL);
-            paraRetornar = _type_1;
+            returnType = _type_1;
           }
         }
       } else {
@@ -495,31 +516,31 @@ public class PascalValidator extends AbstractPascalValidator {
         if (_notEquals_5) {
           Type _type_2 = new Type(this.CHAR);
           ComposedType _composedType = new ComposedType(_type_2, ComposedTypeKind.ARRAY);
-          paraRetornar = _composedType;
+          returnType = _composedType;
         } else {
           set _set = fator.getSet();
           boolean _notEquals_6 = (!Objects.equal(_set, null));
           if (_notEquals_6) {
-            paraRetornar = this.getType(bloco, fator.getSet().getExpressions(), true);
+            returnType = this.getType(bloco, fator.getSet().getExpressions(), true);
           } else {
             boolean _isNil = fator.isNil();
             if (_isNil) {
               Type _type_3 = new Type(this.NIL);
-              paraRetornar = _type_3;
+              returnType = _type_3;
             } else {
               if (((!Objects.equal(fator.getBoolean(), null)) || (!Objects.equal(fator.getNot(), null)))) {
                 Type _type_4 = new Type(this.BOOLEAN);
-                paraRetornar = _type_4;
+                returnType = _type_4;
               } else {
                 function_designator _function = fator.getFunction();
                 boolean _notEquals_7 = (!Objects.equal(_function, null));
                 if (_notEquals_7) {
-                  paraRetornar = this.getType(bloco, fator.getFunction());
+                  returnType = this.getType(bloco, fator.getFunction());
                 } else {
                   expression _expression = fator.getExpression();
                   boolean _notEquals_8 = (!Objects.equal(_expression, null));
                   if (_notEquals_8) {
-                    paraRetornar = this.getType(bloco, fator.getExpression());
+                    returnType = this.getType(bloco, fator.getExpression());
                   }
                 }
               }
@@ -528,39 +549,39 @@ public class PascalValidator extends AbstractPascalValidator {
         }
       }
     }
-    this.mapaDeComparacoes.put(fator, paraRetornar);
-    return paraRetornar;
+    this.comparacoes.put(fator, returnType);
+    return returnType;
   }
   
-  public Type getType(final block bloco, final function_designator designator) {
-    Type paraRetornar = new Type(this.NIL);
-    Procedure funcao = this.getAbstraction(bloco, designator);
-    Procedure resultadoBusca = PascalValidator.searchWithTypeCoersion(this.procedimentos.get(bloco), funcao);
-    if (((!Objects.equal(resultadoBusca, null)) && Objects.equal(resultadoBusca.type, ElementType.FUNCTION))) {
-      Function functionFound = ((Function) resultadoBusca);
-      paraRetornar = functionFound.getReturnType();
+  public Type getType(final block bloco, final function_designator f) {
+    Type returnType = new Type(this.NIL);
+    Procedure function = this.getAbstraction(bloco, f);
+    Procedure abstractionFound = PascalValidator.searchWithTypeCoersion(this.procedures.get(bloco), function);
+    if (((!Objects.equal(abstractionFound, null)) && Objects.equal(abstractionFound.type, ElementType.FUNCTION))) {
+      Function functionFound = ((Function) abstractionFound);
+      returnType = functionFound.getReturnType();
     }
-    return paraRetornar;
+    return returnType;
   }
   
   public Type getType(final block bloco, final term termo) {
-    Type paraRetornar = null;
+    Type greatestType = null;
     EList<factor> _factors = termo.getFactors();
     for (final factor f : _factors) {
       {
-        Type tipo = this.getType(bloco, f);
-        paraRetornar = TypeInferer.greater(tipo, paraRetornar);
+        Type type = this.getType(bloco, f);
+        greatestType = TypeInferer.greater(type, greatestType);
       }
     }
-    this.mapaDeComparacoes.put(termo, paraRetornar);
-    return paraRetornar;
+    this.comparacoes.put(termo, greatestType);
+    return greatestType;
   }
   
   public Type getType(final block bloco, final expression expressao) {
-    Type paraRetornar = new Type(this.NIL);
+    Type returnType = new Type(this.NIL);
     if (((!Objects.equal(expressao.getOperators(), null)) && (!expressao.getOperators().isEmpty()))) {
       Type _type = new Type(this.BOOLEAN);
-      paraRetornar = _type;
+      returnType = _type;
     } else {
       Type greatestType = null;
       EList<simple_expression> _expressions = expressao.getExpressions();
@@ -570,64 +591,64 @@ public class PascalValidator extends AbstractPascalValidator {
           greatestType = TypeInferer.greater(type, greatestType);
         }
       }
-      paraRetornar = greatestType;
+      returnType = greatestType;
     }
-    this.mapaDeComparacoes.put(expressao, paraRetornar);
-    return paraRetornar;
+    this.comparacoes.put(expressao, returnType);
+    return returnType;
   }
   
   public Type getType(final block bloco, final simple_expression expressao) {
-    Type paraRetornar = null;
+    Type greatestType = null;
     EList<EObject> _terms = expressao.getTerms();
     for (final EObject obj : _terms) {
       if ((obj instanceof term)) {
         term termo = ((term) obj);
         Type tipo = this.getType(bloco, termo);
-        paraRetornar = TypeInferer.greater(tipo, paraRetornar);
+        greatestType = TypeInferer.greater(tipo, greatestType);
       } else {
         any_number numero = ((any_number) obj);
         String _integer = numero.getInteger();
         boolean _notEquals = (!Objects.equal(_integer, null));
         if (_notEquals) {
           Type _type = new Type(this.INTEGER);
-          paraRetornar = TypeInferer.greater(_type, paraRetornar);
+          greatestType = TypeInferer.greater(_type, greatestType);
         } else {
           Type _type_1 = new Type(this.REAL);
-          paraRetornar = TypeInferer.greater(_type_1, paraRetornar);
+          greatestType = TypeInferer.greater(_type_1, greatestType);
         }
       }
     }
-    this.mapaDeComparacoes.put(expressao, paraRetornar);
-    return paraRetornar;
+    this.comparacoes.put(expressao, greatestType);
+    return greatestType;
   }
   
-  public Type getType(final block bloco, final expression_list expressoes, final boolean temCoesao) {
-    Type paraRetornar = null;
-    boolean temErro = true;
+  public Type getType(final block bloco, final expression_list expressoes, final boolean coeso) {
+    Type greatestType = null;
+    boolean hasErrors = true;
     EList<expression> _expressions = expressoes.getExpressions();
     for (final expression expressao : _expressions) {
       {
-        Type tipo = this.getType(bloco, expressao);
-        if (temCoesao) {
-          if (((((!Objects.equal(paraRetornar, null)) && (TypeInferer.getTypeWeight(paraRetornar) < 0)) && (TypeInferer.getTypeWeight(tipo) >= 0)) || 
-            ((TypeInferer.getTypeWeight(tipo) < 0) && (TypeInferer.getTypeWeight(paraRetornar) >= 0)))) {
-            this.insertError(expressoes, ((((this.CANNOT_CONVERT_MESSAGE + tipo) + this.TO_MESSAGE) + paraRetornar) + "."), ErrorType.TYPE_COHESION, PascalPackage.Literals.EXPRESSION_LIST__EXPRESSIONS);
-            temErro = true;
+        Type type = this.getType(bloco, expressao);
+        if (coeso) {
+          if (((((!Objects.equal(greatestType, null)) && (TypeInferer.getTypeWeight(greatestType) < 0)) && (TypeInferer.getTypeWeight(type) >= 0)) || 
+            ((TypeInferer.getTypeWeight(type) < 0) && (TypeInferer.getTypeWeight(greatestType) >= 0)))) {
+            this.insertError(expressoes, ((((this.CANNOT_CONVERT_MESSAGE + type) + this.TO_MESSAGE) + greatestType) + "."), ErrorType.TYPE_COHESION, PascalPackage.Literals.EXPRESSION_LIST__EXPRESSIONS);
+            hasErrors = true;
           }
         }
-        paraRetornar = TypeInferer.greater(tipo, paraRetornar);
+        greatestType = TypeInferer.greater(type, greatestType);
       }
     }
-    if ((!temErro)) {
+    if ((!hasErrors)) {
       this.removeError(expressoes, ErrorType.TYPE_COHESION);
     }
-    this.mapaDeComparacoes.put(expressoes, paraRetornar);
-    return paraRetornar;
+    this.comparacoes.put(expressoes, greatestType);
+    return greatestType;
   }
   
-  public static boolean isNumeric(final Object objeto) {
+  public static boolean isNumeric(final Object obj) {
     try {
-      Double.parseDouble(objeto.toString());
+      Double.parseDouble(obj.toString());
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;
@@ -655,34 +676,34 @@ public class PascalValidator extends AbstractPascalValidator {
   }
   
   public static Object getValue(final constant constante, final Set<Variable> variables) {
-    Object paraRetornar = null;
+    Object value = null;
     String _name = constante.getName();
     boolean _notEquals = (!Objects.equal(_name, null));
     if (_notEquals) {
       String _name_1 = constante.getName();
       Variable _variable = new Variable(_name_1);
       Variable variable = PascalValidator.<Variable>search(variables, _variable);
-      paraRetornar = variable.getValue();
+      value = variable.getValue();
     } else {
       number _number = constante.getNumber();
       boolean _notEquals_1 = (!Objects.equal(_number, null));
       if (_notEquals_1) {
-        paraRetornar = PascalValidator.getValue(constante.getNumber());
+        value = PascalValidator.getValue(constante.getNumber());
       } else {
         String _string = constante.getString();
         boolean _notEquals_2 = (!Objects.equal(_string, null));
         if (_notEquals_2) {
-          paraRetornar = constante.getString();
+          value = constante.getString();
         } else {
           String _boolLiteral = constante.getBoolLiteral();
           boolean _notEquals_3 = (!Objects.equal(_boolLiteral, null));
           if (_notEquals_3) {
-            paraRetornar = Boolean.valueOf(constante.getBoolLiteral());
+            value = Boolean.valueOf(constante.getBoolLiteral());
           } else {
             String _nil = constante.getNil();
             boolean _notEquals_4 = (!Objects.equal(_nil, null));
             if (_notEquals_4) {
-              paraRetornar = null;
+              value = null;
             }
           }
         }
@@ -691,14 +712,14 @@ public class PascalValidator extends AbstractPascalValidator {
     String _opterator = constante.getOpterator();
     boolean _notEquals_5 = (!Objects.equal(_opterator, null));
     if (_notEquals_5) {
-      if ((PascalValidator.isNumeric(paraRetornar) && constante.getOpterator().equals("-"))) {
+      if ((PascalValidator.isNumeric(value) && constante.getOpterator().equals("-"))) {
         try {
-          int _parseInt = Integer.parseInt(paraRetornar.toString());
+          int _parseInt = Integer.parseInt(value.toString());
           return Integer.valueOf((-_parseInt));
         } catch (final Throwable _t) {
           if (_t instanceof Exception) {
             final Exception e = (Exception)_t;
-            double _parseDouble = Double.parseDouble(paraRetornar.toString());
+            double _parseDouble = Double.parseDouble(value.toString());
             return Double.valueOf((-_parseDouble));
           } else {
             throw Exceptions.sneakyThrow(_t);
@@ -706,35 +727,35 @@ public class PascalValidator extends AbstractPascalValidator {
         }
       }
     }
-    return paraRetornar;
+    return value;
   }
   
   public <T extends Element> Boolean addElement(final block bloco, final T elemento, final Map<block, Set<T>> container, final EObject errorSection, final EStructuralFeature errorFeature) {
     boolean _xblockexpression = false;
     {
-      T resultadoBusca = null;
-      boolean _equals = Objects.equal(container, this.mapaDeTipos);
+      T elementFound = null;
+      boolean _equals = Objects.equal(container, this.tipos);
       if (_equals) {
-        Type tipo = ((Type) elemento);
-        Type _searchByName = PascalValidator.searchByName(this.mapaDeTipos.get(bloco), tipo);
-        resultadoBusca = ((T) _searchByName);
+        Type type = ((Type) elemento);
+        Type _searchByName = PascalValidator.searchByName(this.tipos.get(bloco), type);
+        elementFound = ((T) _searchByName);
       } else {
-        resultadoBusca = PascalValidator.<T>search(container.get(bloco), elemento);
+        elementFound = PascalValidator.<T>search(container.get(bloco), elemento);
       }
       boolean _xifexpression = false;
-      if (((!Objects.equal(resultadoBusca, null)) && (!resultadoBusca.isInherited()))) {
+      if (((!Objects.equal(elementFound, null)) && (!elementFound.isInherited()))) {
         boolean _xifexpression_1 = false;
-        boolean _equals_1 = Objects.equal(elemento.type, resultadoBusca.type);
+        boolean _equals_1 = Objects.equal(elemento.type, elementFound.type);
         if (_equals_1) {
           String _plus = (elemento.type + this.CANNOT_REDECLARE);
           _xifexpression_1 = this.insertError(errorSection, _plus, ErrorType.REDECLARATION, errorFeature);
         } else {
           boolean _xifexpression_2 = false;
-          boolean _equals_2 = Objects.equal(resultadoBusca.type, ElementType.FUNCTION_RETURN);
+          boolean _equals_2 = Objects.equal(elementFound.type, ElementType.FUNCTION_RETURN);
           if (_equals_2) {
             _xifexpression_2 = this.insertError(errorSection, this.ID_FUNC_RETURN, ErrorType.REDECLARATION, errorFeature);
           } else {
-            String _lowerCase = resultadoBusca.type.toString().toLowerCase();
+            String _lowerCase = elementFound.type.toString().toLowerCase();
             String _plus_1 = (this.ID_IN_USE + _lowerCase);
             String _plus_2 = (_plus_1 + ".");
             _xifexpression_2 = this.insertError(errorSection, _plus_2, ErrorType.REDECLARATION, errorFeature);
@@ -746,9 +767,9 @@ public class PascalValidator extends AbstractPascalValidator {
         this.removeError(errorSection, ErrorType.REDECLARATION);
         container.get(bloco).add(elemento);
         Element _clone = elemento.clone();
-        T elementoHerdado = ((T) _clone);
-        elementoHerdado.inherited = true;
-        this.<T>inheritElement(bloco, elementoHerdado, container);
+        T inheritedElement = ((T) _clone);
+        inheritedElement.inherited = true;
+        this.<T>inheritElement(bloco, inheritedElement, container);
       }
       _xblockexpression = _xifexpression;
     }
@@ -778,56 +799,56 @@ public class PascalValidator extends AbstractPascalValidator {
     }
   }
   
-  public <T extends Element> boolean addElementToAbstraction(final abstraction_declaration declaracao, final T elemento, final Map<block, Set<T>> container) {
+  public <T extends Element> boolean addElementToAbstraction(final abstraction_declaration decl, final T elemento, final Map<block, Set<T>> container) {
     boolean _xblockexpression = false;
     {
-      block _block = declaracao.getBlock();
+      block _block = decl.getBlock();
       boolean _equals = Objects.equal(_block, null);
       if (_equals) {
-        declaracao.setBlock(PascalPackage.eINSTANCE.getPascalFactory().createblock());
+        decl.setBlock(PascalPackage.eINSTANCE.getPascalFactory().createblock());
       }
-      block subBloco = declaracao.getBlock();
-      _xblockexpression = container.get(subBloco).add(elemento);
+      block subblock = decl.getBlock();
+      _xblockexpression = container.get(subblock).add(elemento);
     }
     return _xblockexpression;
   }
   
-  public ArrayList<Variable> getParameters(final block bloco, final abstraction_heading heading, final block abstractionBlock) {
-    ArrayList<Variable> parametros = new ArrayList<Variable>();
+  public ArrayList<Variable> getParameters(final block b, final abstraction_heading heading, final block abstractionBlock) {
+    ArrayList<Variable> parameters = new ArrayList<Variable>();
     formal_parameter_list _parameters = heading.getParameters();
     boolean _notEquals = (!Objects.equal(_parameters, null));
     if (_notEquals) {
-      formal_parameter_list listagem = heading.getParameters();
-      EList<formal_parameter_section> _parameters_1 = listagem.getParameters();
+      formal_parameter_list list = heading.getParameters();
+      EList<formal_parameter_section> _parameters_1 = list.getParameters();
       boolean _notEquals_1 = (!Objects.equal(_parameters_1, null));
       if (_notEquals_1) {
-        EList<formal_parameter_section> _parameters_2 = listagem.getParameters();
-        for (final formal_parameter_section sessao : _parameters_2) {
-          variable_parameter_section _variable = sessao.getVariable();
+        EList<formal_parameter_section> _parameters_2 = list.getParameters();
+        for (final formal_parameter_section section : _parameters_2) {
+          variable_parameter_section _variable = section.getVariable();
           boolean _notEquals_2 = (!Objects.equal(_variable, null));
           if (_notEquals_2) {
-            variable_parameter_section variavel = sessao.getVariable();
-            EList<String> _ids = variavel.getIdentifiers().getIds();
+            variable_parameter_section variable = section.getVariable();
+            EList<String> _ids = variable.getIdentifiers().getIds();
             for (final String varName : _ids) {
               {
-                Type _type = this.getType(bloco, sessao.getVariable().getType());
-                Variable parametro = new Variable(varName, _type, false, abstractionBlock, ElementType.PARAMETER);
-                this.<Variable>addElement(bloco, parametro, this.variaveis, variavel, PascalPackage.Literals.VARIABLE_PARAMETER_SECTION__IDENTIFIERS);
-                parametros.add(parametro);
+                Type _type = this.getType(b, section.getVariable().getType());
+                Variable parameter = new Variable(varName, _type, false, abstractionBlock, ElementType.PARAMETER);
+                this.<Variable>addElement(b, parameter, this.variaveis, variable, PascalPackage.Literals.VARIABLE_PARAMETER_SECTION__IDENTIFIERS);
+                parameters.add(parameter);
               }
             }
           } else {
-            value_parameter_section _value = sessao.getValue();
+            value_parameter_section _value = section.getValue();
             boolean _notEquals_3 = (!Objects.equal(_value, null));
             if (_notEquals_3) {
-              value_parameter_section valor = sessao.getValue();
-              EList<String> _ids_1 = valor.getIdentifiers().getIds();
-              for (final String nomeValor : _ids_1) {
+              value_parameter_section value = section.getValue();
+              EList<String> _ids_1 = value.getIdentifiers().getIds();
+              for (final String valName : _ids_1) {
                 {
-                  Type _type = this.getType(bloco, valor.getType());
-                  Variable parametro = new Variable(nomeValor, _type, false, abstractionBlock, ElementType.PARAMETER);
-                  this.<Variable>addElement(bloco, parametro, this.variaveis, valor, PascalPackage.Literals.VALUE_PARAMETER_SECTION__IDENTIFIERS);
-                  parametros.add(parametro);
+                  Type _type = this.getType(b, value.getType());
+                  Variable parameter = new Variable(valName, _type, false, abstractionBlock, ElementType.PARAMETER);
+                  this.<Variable>addElement(b, parameter, this.variaveis, value, PascalPackage.Literals.VALUE_PARAMETER_SECTION__IDENTIFIERS);
+                  parameters.add(parameter);
                 }
               }
             }
@@ -835,29 +856,29 @@ public class PascalValidator extends AbstractPascalValidator {
         }
       }
     }
-    return parametros;
+    return parameters;
   }
   
-  public Boolean addAbstraction(final block bloco, final abstraction_declaration declaracao, final abstraction_heading heading) {
+  public Boolean addAbstraction(final block b, final abstraction_declaration decl, final abstraction_heading heading) {
     Boolean _xblockexpression = null;
     {
-      String nome = heading.getName();
-      block _block = declaracao.getBlock();
+      String name = heading.getName();
+      block _block = decl.getBlock();
       boolean _equals = Objects.equal(_block, null);
       if (_equals) {
-        declaracao.setBlock(PascalPackage.eINSTANCE.getPascalFactory().createblock());
+        decl.setBlock(PascalPackage.eINSTANCE.getPascalFactory().createblock());
       }
-      this.<Variable>clear(declaracao.getBlock(), ElementType.PARAMETER, this.variaveis);
-      ArrayList<Variable> parametro = this.getParameters(declaracao.getBlock(), heading, declaracao.getBlock());
-      boolean proximo = declaracao.isForward();
-      String tipoDoRetorno = heading.getResultType();
+      this.<Variable>clear(decl.getBlock(), ElementType.PARAMETER, this.variaveis);
+      ArrayList<Variable> parameters = this.getParameters(decl.getBlock(), heading, decl.getBlock());
+      boolean forward = decl.isForward();
+      String returnType = heading.getResultType();
       Boolean _xifexpression = null;
-      boolean _notEquals = (!Objects.equal(tipoDoRetorno, null));
+      boolean _notEquals = (!Objects.equal(returnType, null));
       if (_notEquals) {
         boolean _xblockexpression_1 = false;
         {
-          Set<Type> _get = this.mapaDeTipos.get(bloco);
-          Type _type = new Type(tipoDoRetorno);
+          Set<Type> _get = this.tipos.get(b);
+          Type _type = new Type(returnType);
           Type _search = PascalValidator.<Type>search(_get, _type);
           boolean _equals_1 = Objects.equal(_search, null);
           if (_equals_1) {
@@ -865,152 +886,152 @@ public class PascalValidator extends AbstractPascalValidator {
           } else {
             this.removeError(heading, ErrorType.UNDEFINED_TYPE);
           }
-          Type _type_1 = this.getType(bloco, tipoDoRetorno);
-          Function funcao = new Function(nome, proximo, bloco, declaracao, parametro, proximo, _type_1);
-          this.<Procedure>addElement(bloco, funcao, this.procedimentos, heading, PascalPackage.Literals.ABSTRACTION_HEADING__NAME);
-          Type _type_2 = this.getType(bloco, tipoDoRetorno);
-          block _block_1 = declaracao.getBlock();
-          Variable variavelRetorno = new Variable(nome, _type_2, false, _block_1, ElementType.FUNCTION_RETURN);
-          variavelRetorno.setOwningFunction(funcao);
-          _xblockexpression_1 = this.variaveis.get(declaracao.getBlock()).add(variavelRetorno);
+          Type _type_1 = this.getType(b, returnType);
+          Function function = new Function(name, forward, b, decl, parameters, forward, _type_1);
+          this.<Procedure>addElement(b, function, this.procedures, heading, PascalPackage.Literals.ABSTRACTION_HEADING__NAME);
+          Type _type_2 = this.getType(b, returnType);
+          block _block_1 = decl.getBlock();
+          Variable returnVariable = new Variable(name, _type_2, false, _block_1, ElementType.FUNCTION_RETURN);
+          returnVariable.setOwningFunction(function);
+          _xblockexpression_1 = this.variaveis.get(decl.getBlock()).add(returnVariable);
         }
         _xifexpression = Boolean.valueOf(_xblockexpression_1);
       } else {
-        Procedure _procedure = new Procedure(nome, proximo, bloco, declaracao, parametro, proximo);
-        _xifexpression = this.<Procedure>addElement(bloco, _procedure, this.procedimentos, heading, PascalPackage.Literals.ABSTRACTION_HEADING__NAME);
+        Procedure _procedure = new Procedure(name, forward, b, decl, parameters, forward);
+        _xifexpression = this.<Procedure>addElement(b, _procedure, this.procedures, heading, PascalPackage.Literals.ABSTRACTION_HEADING__NAME);
       }
       _xblockexpression = _xifexpression;
     }
     return _xblockexpression;
   }
   
-  public void checkAbstractionRedeclaration(final block bloco) {
-    procedure_and_function_declaration_part _abstraction = bloco.getDeclaration().getAbstraction();
+  public void checkAbstractionRedeclaration(final block b) {
+    procedure_and_function_declaration_part _abstraction = b.getDeclaration().getAbstraction();
     boolean _notEquals = (!Objects.equal(_abstraction, null));
     if (_notEquals) {
-      this.<Procedure>clear(bloco, ElementType.FUNCTION, this.procedimentos);
-      this.<Procedure>clear(bloco, ElementType.PROCEDURE, this.procedimentos);
-      procedure_and_function_declaration_part abstracao = bloco.getDeclaration().getAbstraction();
-      EList<abstraction_declaration> _functions = abstracao.getFunctions();
+      this.<Procedure>clear(b, ElementType.FUNCTION, this.procedures);
+      this.<Procedure>clear(b, ElementType.PROCEDURE, this.procedures);
+      procedure_and_function_declaration_part abstraction = b.getDeclaration().getAbstraction();
+      EList<abstraction_declaration> _functions = abstraction.getFunctions();
       boolean _notEquals_1 = (!Objects.equal(_functions, null));
       if (_notEquals_1) {
-        EList<abstraction_declaration> _functions_1 = abstracao.getFunctions();
+        EList<abstraction_declaration> _functions_1 = abstraction.getFunctions();
         for (final abstraction_declaration function : _functions_1) {
-          this.addAbstraction(bloco, function, function.getHeading());
+          this.addAbstraction(b, function, function.getHeading());
         }
       }
-      EList<abstraction_heading> _procedures = abstracao.getProcedures();
+      EList<abstraction_heading> _procedures = abstraction.getProcedures();
       boolean _notEquals_2 = (!Objects.equal(_procedures, null));
       if (_notEquals_2) {
-        EList<abstraction_heading> _procedures_1 = abstracao.getProcedures();
+        EList<abstraction_heading> _procedures_1 = abstraction.getProcedures();
         for (final abstraction_declaration procedure : _procedures_1) {
-          this.addAbstraction(bloco, procedure, procedure.getHeading());
+          this.addAbstraction(b, procedure, procedure.getHeading());
         }
       }
     }
   }
   
-  public void checkTypeRedeclaration(final block bloco) {
-    this.<Type>clear(bloco, ElementType.TYPE, this.mapaDeTipos);
-    type_definition_part _type_def = bloco.getDeclaration().getType_def();
+  public void checkTypeRedeclaration(final block b) {
+    this.<Type>clear(b, ElementType.TYPE, this.tipos);
+    type_definition_part _type_def = b.getDeclaration().getType_def();
     boolean _notEquals = (!Objects.equal(_type_def, null));
     if (_notEquals) {
-      EList<type_definition> _types = bloco.getDeclaration().getType_def().getTypes();
-      for (final type_definition definicao : _types) {
-        String _name = definicao.getName();
-        String _realType = this.getType(bloco, definicao.getType()).getRealType();
+      EList<type_definition> _types = b.getDeclaration().getType_def().getTypes();
+      for (final type_definition t : _types) {
+        String _name = t.getName();
+        String _realType = this.getType(b, t.getType()).getRealType();
         Type _type = new Type(_name, false, _realType);
-        this.<Type>addElement(bloco, _type, this.mapaDeTipos, definicao, PascalPackage.Literals.TYPE_DEFINITION__NAME);
+        this.<Type>addElement(b, _type, this.tipos, t, PascalPackage.Literals.TYPE_DEFINITION__NAME);
       }
     }
   }
   
-  public void checkConstantRedeclaration(final block bloco) {
-    this.<Variable>clear(bloco, ElementType.CONSTANT, this.variaveis);
-    constant_definition_part _constant_def = bloco.getDeclaration().getConstant_def();
+  public void checkConstantRedeclaration(final block b) {
+    this.<Variable>clear(b, ElementType.CONSTANT, this.variaveis);
+    constant_definition_part _constant_def = b.getDeclaration().getConstant_def();
     boolean _notEquals = (!Objects.equal(_constant_def, null));
     if (_notEquals) {
-      EList<constant_definition> _consts = bloco.getDeclaration().getConstant_def().getConsts();
-      for (final constant_definition constante : _consts) {
-        String _name = constante.getName();
-        Type _type = this.getType(bloco, constante.getConst());
-        Object _value = PascalValidator.getValue(constante.getConst(), this.variaveis.get(bloco));
-        Variable _variable = new Variable(_name, _type, false, bloco, ElementType.CONSTANT, _value);
-        this.<Variable>addElement(bloco, _variable, this.variaveis, constante, PascalPackage.Literals.CONSTANT_DEFINITION__NAME);
+      EList<constant_definition> _consts = b.getDeclaration().getConstant_def().getConsts();
+      for (final constant_definition const_ : _consts) {
+        String _name = const_.getName();
+        Type _type = this.getType(b, const_.getConst());
+        Object _value = PascalValidator.getValue(const_.getConst(), this.variaveis.get(b));
+        Variable _variable = new Variable(_name, _type, false, b, ElementType.CONSTANT, _value);
+        this.<Variable>addElement(b, _variable, this.variaveis, const_, PascalPackage.Literals.CONSTANT_DEFINITION__NAME);
       }
     }
   }
   
-  public void checkVariableRedeclaration(final block bloco) {
-    this.<Variable>clear(bloco, ElementType.VARIABLE, this.variaveis);
-    variable_declaration_part _variable_decl = bloco.getDeclaration().getVariable_decl();
+  public void checkVariableRedeclaration(final block b) {
+    this.<Variable>clear(b, ElementType.VARIABLE, this.variaveis);
+    variable_declaration_part _variable_decl = b.getDeclaration().getVariable_decl();
     boolean _notEquals = (!Objects.equal(_variable_decl, null));
     if (_notEquals) {
-      EList<variable_section> _sections = bloco.getDeclaration().getVariable_decl().getSections();
-      for (final variable_section sessao : _sections) {
-        EList<String> _names = sessao.getIdentifiers().getNames();
-        for (final String nome : _names) {
+      EList<variable_section> _sections = b.getDeclaration().getVariable_decl().getSections();
+      for (final variable_section section : _sections) {
+        EList<String> _names = section.getIdentifiers().getNames();
+        for (final String name : _names) {
           {
-            Type tipo = this.getType(bloco, sessao.getType());
-            Variable _variable = new Variable(nome, tipo, false, bloco, ElementType.VARIABLE);
-            this.<Variable>addElement(bloco, _variable, this.variaveis, sessao, PascalPackage.Literals.VARIABLE_SECTION__IDENTIFIERS);
+            Type type = this.getType(b, section.getType());
+            Variable _variable = new Variable(name, type, false, b, ElementType.VARIABLE);
+            this.<Variable>addElement(b, _variable, this.variaveis, section, PascalPackage.Literals.VARIABLE_SECTION__IDENTIFIERS);
           }
         }
       }
     }
   }
   
-  public boolean checkVariable(final block bloco, final variable Variavel, final boolean ehAtribuicao) {
-    boolean ehValido = true;
-    boolean _equals = Objects.equal(Variavel, null);
+  public boolean checkVariable(final block b, final variable v, final boolean isAssignment) {
+    boolean isValid = true;
+    boolean _equals = Objects.equal(v, null);
     if (_equals) {
       return true;
     }
-    Set<Variable> _get = this.variaveis.get(bloco);
-    String _name = Variavel.getName();
+    Set<Variable> _get = this.variaveis.get(b);
+    String _name = v.getName();
     Variable _variable = new Variable(_name);
-    Variable resultadoBusca = PascalValidator.<Variable>search(_get, _variable);
-    boolean _equals_1 = Objects.equal(resultadoBusca, null);
+    Variable searchVariable = PascalValidator.<Variable>search(_get, _variable);
+    boolean _equals_1 = Objects.equal(searchVariable, null);
     if (_equals_1) {
-      ehValido = false;
-      this.insertError(Variavel, this.VAR_NOT_DECL, ErrorType.NOT_DECLARATION, PascalPackage.Literals.VARIABLE__NAME);
+      isValid = false;
+      this.insertError(v, this.VAR_NOT_DECL, ErrorType.NOT_DECLARATION, PascalPackage.Literals.VARIABLE__NAME);
     } else {
-      this.removeError(Variavel, ErrorType.NOT_DECLARATION);
-      if (ehAtribuicao) {
-        boolean _equals_2 = Objects.equal(resultadoBusca.type, ElementType.CONSTANT);
+      this.removeError(v, ErrorType.NOT_DECLARATION);
+      if (isAssignment) {
+        boolean _equals_2 = Objects.equal(searchVariable.type, ElementType.CONSTANT);
         if (_equals_2) {
-          ehValido = false;
-          this.insertError(Variavel, this.CONST_CNOT_ASSIGN, ErrorType.CONSTANT_ASSIGNMENT, PascalPackage.Literals.VARIABLE__NAME);
+          isValid = false;
+          this.insertError(v, this.CONST_CNOT_ASSIGN, ErrorType.CONSTANT_ASSIGNMENT, PascalPackage.Literals.VARIABLE__NAME);
         } else {
-          this.removeError(Variavel, ErrorType.CONSTANT_ASSIGNMENT);
+          this.removeError(v, ErrorType.CONSTANT_ASSIGNMENT);
         }
       }
     }
-    return ehValido;
+    return isValid;
   }
   
-  public void checkAbstraction(final block bloco, final Procedure procedimento, final boolean ahApenasFuncao, final EObject objeto, final EStructuralFeature feature) {
-    Procedure resultadoBusca = PascalValidator.searchWithTypeCoersion(this.procedimentos.get(bloco), procedimento);
-    boolean _equals = Objects.equal(resultadoBusca, null);
+  public void checkAbstraction(final block b, final Procedure proc, final boolean functionOnly, final EObject object, final EStructuralFeature feature) {
+    Procedure abstractionFound = PascalValidator.searchWithTypeCoersion(this.procedures.get(b), proc);
+    boolean _equals = Objects.equal(abstractionFound, null);
     if (_equals) {
-      Set<Procedure> _get = this.procedimentos.get(bloco);
-      for (final Procedure outroProcedimento : _get) {
-        boolean _equals_1 = outroProcedimento.name.toLowerCase().equals(procedimento.name.toLowerCase());
+      Set<Procedure> _get = this.procedures.get(b);
+      for (final Procedure p : _get) {
+        boolean _equals_1 = p.name.toLowerCase().equals(proc.name.toLowerCase());
         if (_equals_1) {
-          int _size = outroProcedimento.parameters.size();
-          int _size_1 = procedimento.parameters.size();
+          int _size = p.parameters.size();
+          int _size_1 = proc.parameters.size();
           boolean _notEquals = (_size != _size_1);
           if (_notEquals) {
-            int _size_2 = outroProcedimento.parameters.size();
+            int _size_2 = p.parameters.size();
             String _plus = (this.ARG_WRONG_NUM + Integer.valueOf(_size_2));
             String _plus_1 = (_plus + this.RECEIVED);
-            int _size_3 = procedimento.parameters.size();
+            int _size_3 = proc.parameters.size();
             String _plus_2 = (_plus_1 + Integer.valueOf(_size_3));
             String _plus_3 = (_plus_2 + this.ARGS);
-            this.insertError(objeto, _plus_3, ErrorType.NOT_DECLARATION, feature);
+            this.insertError(object, _plus_3, ErrorType.NOT_DECLARATION, feature);
           } else {
-            Iterator<Variable> it1 = outroProcedimento.parameters.iterator();
-            Iterator<Variable> it2 = procedimento.parameters.iterator();
+            Iterator<Variable> it1 = p.parameters.iterator();
+            Iterator<Variable> it2 = proc.parameters.iterator();
             while ((it1.hasNext() && it2.hasNext())) {
               {
                 Variable type1 = it1.next();
@@ -1018,7 +1039,7 @@ public class PascalValidator extends AbstractPascalValidator {
                 boolean _areTypesCompatibles = TypeInferer.areTypesCompatibles(type1.getVarType(), type2.getVarType());
                 boolean _not = (!_areTypesCompatibles);
                 if (_not) {
-                  this.insertError(objeto, ((((this.INCOMPATIBLE_TYPES + outroProcedimento.parameters) + this.RECEIVED) + procedimento.parameters) + "."), ErrorType.NOT_DECLARATION, feature);
+                  this.insertError(object, ((((this.INCOMPATIBLE_TYPES + p.parameters) + this.RECEIVED) + proc.parameters) + "."), ErrorType.NOT_DECLARATION, feature);
                   return;
                 }
               }
@@ -1027,200 +1048,200 @@ public class PascalValidator extends AbstractPascalValidator {
           return;
         }
       }
-      this.insertError(objeto, this.FUNC_NOT_DECL, ErrorType.NOT_DECLARATION, feature);
+      this.insertError(object, this.FUNC_NOT_DECL, ErrorType.NOT_DECLARATION, feature);
     } else {
-      this.removeError(objeto, ErrorType.NOT_DECLARATION);
-      if ((Objects.equal(resultadoBusca.type, ElementType.PROCEDURE) && ahApenasFuncao)) {
-        this.insertError(objeto, this.FUNC_ONLY, ErrorType.FUNCTION_ONLY, feature);
+      this.removeError(object, ErrorType.NOT_DECLARATION);
+      if ((Objects.equal(abstractionFound.type, ElementType.PROCEDURE) && functionOnly)) {
+        this.insertError(object, this.FUNC_ONLY, ErrorType.FUNCTION_ONLY, feature);
       } else {
-        this.removeError(objeto, ErrorType.FUNCTION_ONLY);
+        this.removeError(object, ErrorType.FUNCTION_ONLY);
       }
     }
   }
   
-  public void checkAbstractionCall(final block bloco, final function_designator designator, final boolean ahApenasFuncao) {
-    expression_list _expressions = designator.getExpressions();
+  public void checkAbstractionCall(final block b, final function_designator function, final boolean functionOnly) {
+    expression_list _expressions = function.getExpressions();
     boolean _notEquals = (!Objects.equal(_expressions, null));
     if (_notEquals) {
-      EList<expression> _expressions_1 = designator.getExpressions().getExpressions();
-      for (final expression expressao : _expressions_1) {
-        this.checkExpression(bloco, expressao);
+      EList<expression> _expressions_1 = function.getExpressions().getExpressions();
+      for (final expression e : _expressions_1) {
+        this.checkExpression(b, e);
       }
     }
-    this.checkAbstraction(bloco, this.getAbstraction(bloco, designator), ahApenasFuncao, designator, PascalPackage.Literals.FUNCTION_DESIGNATOR__NAME);
+    this.checkAbstraction(b, this.getAbstraction(b, function), functionOnly, function, PascalPackage.Literals.FUNCTION_DESIGNATOR__NAME);
   }
   
-  public void checkFactor(final block bloco, final factor fator) {
-    variable _variable = fator.getVariable();
+  public void checkFactor(final block b, final factor f) {
+    variable _variable = f.getVariable();
     boolean _notEquals = (!Objects.equal(_variable, null));
     if (_notEquals) {
-      this.checkVariable(bloco, fator.getVariable(), false);
-      boolean _containsKey = this.variaveis.containsKey(bloco);
+      this.checkVariable(b, f.getVariable(), false);
+      boolean _containsKey = this.variaveis.containsKey(b);
       if (_containsKey) {
-        Set<Variable> _get = this.variaveis.get(bloco);
-        String _name = fator.getVariable().getName();
+        Set<Variable> _get = this.variaveis.get(b);
+        String _name = f.getVariable().getName();
         Variable _variable_1 = new Variable(_name);
-        Variable resultadoBusca = PascalValidator.<Variable>search(_get, _variable_1);
-        if (((!Objects.equal(resultadoBusca, null)) && Objects.equal(resultadoBusca.getValue(), null))) {
-          this.insertError(fator, this.VAR_NOT_INIT, ErrorType.NOT_INITIALIZED, PascalPackage.Literals.FACTOR__VARIABLE);
+        Variable v = PascalValidator.<Variable>search(_get, _variable_1);
+        if (((!Objects.equal(v, null)) && Objects.equal(v.getValue(), null))) {
+          this.insertError(f, this.VAR_NOT_INIT, ErrorType.NOT_INITIALIZED, PascalPackage.Literals.FACTOR__VARIABLE);
         } else {
-          this.removeError(fator, ErrorType.NOT_INITIALIZED);
+          this.removeError(f, ErrorType.NOT_INITIALIZED);
         }
       }
     } else {
-      function_designator _function = fator.getFunction();
+      function_designator _function = f.getFunction();
       boolean _notEquals_1 = (!Objects.equal(_function, null));
       if (_notEquals_1) {
-        this.checkAbstractionCall(bloco, fator.getFunction(), true);
+        this.checkAbstractionCall(b, f.getFunction(), true);
       } else {
-        factor _not = fator.getNot();
+        factor _not = f.getNot();
         boolean _notEquals_2 = (!Objects.equal(_not, null));
         if (_notEquals_2) {
-          boolean _equals = this.getType(bloco, fator.getNot()).getRealType().toLowerCase().equals(this.BOOLEAN);
+          boolean _equals = this.getType(b, f.getNot()).getRealType().toLowerCase().equals(this.BOOLEAN);
           boolean _not_1 = (!_equals);
           if (_not_1) {
-            Type _type = this.getType(bloco, fator.getNot());
+            Type _type = this.getType(b, f.getNot());
             String _plus = (this.CANNOT_CONVERT_MESSAGE + _type);
             String _plus_1 = (_plus + this.TO_BOOL);
-            this.insertError(fator, _plus_1, ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.FACTOR__NOT);
+            this.insertError(f, _plus_1, ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.FACTOR__NOT);
           } else {
-            this.removeError(fator, ErrorType.TYPE_CONVERSION_ERROR);
+            this.removeError(f, ErrorType.TYPE_CONVERSION_ERROR);
           }
-          this.checkFactor(bloco, fator.getNot());
+          this.checkFactor(b, f.getNot());
         } else {
-          expression _expression = fator.getExpression();
+          expression _expression = f.getExpression();
           boolean _notEquals_3 = (!Objects.equal(_expression, null));
           if (_notEquals_3) {
-            this.checkExpression(bloco, fator.getExpression());
+            this.checkExpression(b, f.getExpression());
           }
         }
       }
     }
   }
   
-  public void checkTerm(final block bloco, final term termo) {
-    boolean ehBooleano = false;
-    boolean ehNumeral = false;
-    EList<String> _operators = termo.getOperators();
+  public void checkTerm(final block b, final term t) {
+    boolean isBoolean = false;
+    boolean isNumeric = false;
+    EList<String> _operators = t.getOperators();
     boolean _notEquals = (!Objects.equal(_operators, null));
     if (_notEquals) {
-      EList<String> _operators_1 = termo.getOperators();
-      for (final String operador : _operators_1) {
-        boolean _equals = operador.toLowerCase().equals("and");
+      EList<String> _operators_1 = t.getOperators();
+      for (final String op : _operators_1) {
+        boolean _equals = op.toLowerCase().equals("and");
         if (_equals) {
-          ehBooleano = true;
+          isBoolean = true;
         } else {
-          if ((!ehBooleano)) {
-            ehNumeral = true;
+          if ((!isBoolean)) {
+            isNumeric = true;
           } else {
-            this.insertError(termo, this.INVALID_OP, ErrorType.INVALID_OPERATOR, PascalPackage.Literals.TERM__OPERATORS);
+            this.insertError(t, this.INVALID_OP, ErrorType.INVALID_OPERATOR, PascalPackage.Literals.TERM__OPERATORS);
             return;
           }
         }
       }
     }
-    this.removeError(termo, ErrorType.INVALID_OPERATOR);
-    EList<factor> _factors = termo.getFactors();
-    for (final factor fator : _factors) {
+    this.removeError(t, ErrorType.INVALID_OPERATOR);
+    EList<factor> _factors = t.getFactors();
+    for (final factor f : _factors) {
       {
-        if (ehBooleano) {
-          boolean _equals_1 = this.getType(bloco, fator).getRealType().toLowerCase().equals(this.BOOLEAN);
+        if (isBoolean) {
+          boolean _equals_1 = this.getType(b, f).getRealType().toLowerCase().equals(this.BOOLEAN);
           boolean _not = (!_equals_1);
           if (_not) {
-            Type _type = this.getType(bloco, fator);
+            Type _type = this.getType(b, f);
             String _plus = (this.CANNOT_CONVERT_MESSAGE + _type);
             String _plus_1 = (_plus + this.TO_BOOL);
-            this.insertError(termo, _plus_1, ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.TERM__FACTORS);
+            this.insertError(t, _plus_1, ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.TERM__FACTORS);
           } else {
-            this.removeError(termo, ErrorType.TYPE_CONVERSION_ERROR);
+            this.removeError(t, ErrorType.TYPE_CONVERSION_ERROR);
           }
         } else {
-          if (ehNumeral) {
-            int _typeWeight = TypeInferer.getTypeWeight(this.getType(bloco, fator));
+          if (isNumeric) {
+            int _typeWeight = TypeInferer.getTypeWeight(this.getType(b, f));
             boolean _equals_2 = (_typeWeight == (-1));
             if (_equals_2) {
-              Type _type_1 = this.getType(bloco, fator);
+              Type _type_1 = this.getType(b, f);
               String _plus_2 = (this.CANNOT_CONVERT_MESSAGE + _type_1);
               String _plus_3 = (_plus_2 + this.TO_NUM);
-              this.insertError(termo, _plus_3, ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.TERM__FACTORS);
+              this.insertError(t, _plus_3, ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.TERM__FACTORS);
             } else {
-              this.removeError(termo, ErrorType.TYPE_CONVERSION_ERROR);
+              this.removeError(t, ErrorType.TYPE_CONVERSION_ERROR);
             }
           }
         }
-        this.checkFactor(bloco, fator);
+        this.checkFactor(b, f);
       }
     }
   }
   
-  public void checkExpression(final block bloco, final expression expressao) {
-    EList<simple_expression> _expressions = expressao.getExpressions();
-    for (final simple_expression outraExpressao : _expressions) {
+  public void checkExpression(final block b, final expression expr) {
+    EList<simple_expression> _expressions = expr.getExpressions();
+    for (final simple_expression s : _expressions) {
       {
-        boolean ehBooleano = false;
-        boolean ehNumeral = false;
-        String _prefixOperator = outraExpressao.getPrefixOperator();
+        boolean isBoolean = false;
+        boolean isNumeric = false;
+        String _prefixOperator = s.getPrefixOperator();
         boolean _notEquals = (!Objects.equal(_prefixOperator, null));
         if (_notEquals) {
-          ehNumeral = true;
+          isNumeric = true;
         }
-        EList<String> _operators = outraExpressao.getOperators();
+        EList<String> _operators = s.getOperators();
         boolean _notEquals_1 = (!Objects.equal(_operators, null));
         if (_notEquals_1) {
-          EList<String> _operators_1 = outraExpressao.getOperators();
-          for (final String operador : _operators_1) {
-            boolean _equals = operador.toLowerCase().equals("or");
+          EList<String> _operators_1 = s.getOperators();
+          for (final String op : _operators_1) {
+            boolean _equals = op.toLowerCase().equals("or");
             if (_equals) {
-              ehBooleano = true;
+              isBoolean = true;
             } else {
-              if ((!ehBooleano)) {
-                ehNumeral = true;
+              if ((!isBoolean)) {
+                isNumeric = true;
               } else {
-                this.insertError(outraExpressao, this.INVALID_OP, ErrorType.INVALID_OPERATOR, PascalPackage.Literals.SIMPLE_EXPRESSION__OPERATORS);
+                this.insertError(s, this.INVALID_OP, ErrorType.INVALID_OPERATOR, PascalPackage.Literals.SIMPLE_EXPRESSION__OPERATORS);
                 return;
               }
             }
           }
         }
-        if ((ehNumeral && ehBooleano)) {
-          this.insertError(outraExpressao, this.NUM_ONLY, ErrorType.INVALID_OPERATOR, PascalPackage.Literals.SIMPLE_EXPRESSION__OPERATORS);
+        if ((isNumeric && isBoolean)) {
+          this.insertError(s, this.NUM_ONLY, ErrorType.INVALID_OPERATOR, PascalPackage.Literals.SIMPLE_EXPRESSION__OPERATORS);
         } else {
-          this.removeError(outraExpressao, ErrorType.INVALID_OPERATOR);
-          EList<EObject> _terms = outraExpressao.getTerms();
-          for (final EObject objeto : _terms) {
-            if ((objeto instanceof term)) {
-              term termo = ((term) objeto);
-              if (ehBooleano) {
-                boolean _equals_1 = this.getType(bloco, termo).getRealType().toLowerCase().equals(this.BOOLEAN);
+          this.removeError(s, ErrorType.INVALID_OPERATOR);
+          EList<EObject> _terms = s.getTerms();
+          for (final EObject obj : _terms) {
+            if ((obj instanceof term)) {
+              term t = ((term) obj);
+              if (isBoolean) {
+                boolean _equals_1 = this.getType(b, t).getRealType().toLowerCase().equals(this.BOOLEAN);
                 boolean _not = (!_equals_1);
                 if (_not) {
-                  Type _type = this.getType(bloco, termo);
+                  Type _type = this.getType(b, t);
                   String _plus = (this.CANNOT_CONVERT_MESSAGE + _type);
                   String _plus_1 = (_plus + this.TO_BOOL);
-                  this.insertError(outraExpressao, _plus_1, ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.SIMPLE_EXPRESSION__TERMS);
+                  this.insertError(s, _plus_1, ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.SIMPLE_EXPRESSION__TERMS);
                 } else {
-                  this.removeError(outraExpressao, ErrorType.TYPE_CONVERSION_ERROR);
+                  this.removeError(s, ErrorType.TYPE_CONVERSION_ERROR);
                 }
               } else {
-                if (ehNumeral) {
-                  int _typeWeight = TypeInferer.getTypeWeight(this.getType(bloco, termo));
+                if (isNumeric) {
+                  int _typeWeight = TypeInferer.getTypeWeight(this.getType(b, t));
                   boolean _equals_2 = (_typeWeight == (-1));
                   if (_equals_2) {
-                    Type _type_1 = this.getType(bloco, termo);
+                    Type _type_1 = this.getType(b, t);
                     String _plus_2 = (this.CANNOT_CONVERT_MESSAGE + _type_1);
                     String _plus_3 = (_plus_2 + this.TO_NUM);
-                    this.insertError(outraExpressao, _plus_3, ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.SIMPLE_EXPRESSION__TERMS);
+                    this.insertError(s, _plus_3, ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.SIMPLE_EXPRESSION__TERMS);
                   } else {
-                    this.removeError(outraExpressao, ErrorType.TYPE_CONVERSION_ERROR);
+                    this.removeError(s, ErrorType.TYPE_CONVERSION_ERROR);
                   }
                 }
               }
-              this.checkTerm(bloco, termo);
+              this.checkTerm(b, t);
             } else {
-              if ((!ehNumeral)) {
-                this.insertError(outraExpressao, this.NUM_ONLY, ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.SIMPLE_EXPRESSION__TERMS);
+              if ((!isNumeric)) {
+                this.insertError(s, this.NUM_ONLY, ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.SIMPLE_EXPRESSION__TERMS);
               } else {
-                this.removeError(outraExpressao, ErrorType.TYPE_CONVERSION_ERROR);
+                this.removeError(s, ErrorType.TYPE_CONVERSION_ERROR);
               }
             }
           }
@@ -1229,36 +1250,36 @@ public class PascalValidator extends AbstractPascalValidator {
     }
   }
   
-  public Boolean checkConstant(final block bloco, final constant constante) {
+  public Boolean checkConstant(final block b, final constant const_) {
     boolean _xifexpression = false;
-    String _name = constante.getName();
+    String _name = const_.getName();
     boolean _notEquals = (!Objects.equal(_name, null));
     if (_notEquals) {
       boolean _xblockexpression = false;
       {
-        Set<Variable> _get = this.variaveis.get(bloco);
-        String _name_1 = constante.getName();
+        Set<Variable> _get = this.variaveis.get(b);
+        String _name_1 = const_.getName();
         Variable _variable = new Variable(_name_1);
-        Variable resultadoBusca = PascalValidator.<Variable>search(_get, _variable);
+        Variable searchVariable = PascalValidator.<Variable>search(_get, _variable);
         boolean _xifexpression_1 = false;
-        boolean _equals = Objects.equal(resultadoBusca, null);
+        boolean _equals = Objects.equal(searchVariable, null);
         if (_equals) {
-          _xifexpression_1 = this.insertError(constante, this.CONST_NOT_DECL, ErrorType.NOT_DECLARATION, PascalPackage.Literals.CONSTANT__NAME);
+          _xifexpression_1 = this.insertError(const_, this.CONST_NOT_DECL, ErrorType.NOT_DECLARATION, PascalPackage.Literals.CONSTANT__NAME);
         } else {
           boolean _xblockexpression_1 = false;
           {
-            this.removeError(constante, ErrorType.NOT_DECLARATION);
-            boolean _notEquals_1 = (!Objects.equal(resultadoBusca.type, ElementType.CONSTANT));
+            this.removeError(const_, ErrorType.NOT_DECLARATION);
+            boolean _notEquals_1 = (!Objects.equal(searchVariable.type, ElementType.CONSTANT));
             if (_notEquals_1) {
-              this.insertError(constante, this.CONST_ONLY, ErrorType.CONSTANT_ONLY, PascalPackage.Literals.CONSTANT__NAME);
+              this.insertError(const_, this.CONST_ONLY, ErrorType.CONSTANT_ONLY, PascalPackage.Literals.CONSTANT__NAME);
             } else {
-              this.removeError(constante, ErrorType.CONSTANT_ONLY);
+              this.removeError(const_, ErrorType.CONSTANT_ONLY);
             }
             boolean _xifexpression_2 = false;
-            if (((!Objects.equal(constante.getOpterator(), null)) && (TypeInferer.getTypeWeight(resultadoBusca.getVarType()) < 0))) {
-              _xifexpression_2 = this.insertError(constante, this.NAN, ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.CONSTANT__NAME);
+            if (((!Objects.equal(const_.getOpterator(), null)) && (TypeInferer.getTypeWeight(searchVariable.getVarType()) < 0))) {
+              _xifexpression_2 = this.insertError(const_, this.NAN, ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.CONSTANT__NAME);
             } else {
-              this.removeError(constante, ErrorType.TYPE_CONVERSION_ERROR);
+              this.removeError(const_, ErrorType.TYPE_CONVERSION_ERROR);
             }
             _xblockexpression_1 = _xifexpression_2;
           }
@@ -1271,68 +1292,68 @@ public class PascalValidator extends AbstractPascalValidator {
     return Boolean.valueOf(_xifexpression);
   }
   
-  public void checkStatement(final block bloco, final statement declaracao) {
-    simple_statement _simple = declaracao.getSimple();
+  public void checkStatement(final block b, final statement stmt) {
+    simple_statement _simple = stmt.getSimple();
     boolean _notEquals = (!Objects.equal(_simple, null));
     if (_notEquals) {
-      simple_statement simples = declaracao.getSimple();
-      assignment_statement _assignment = simples.getAssignment();
+      simple_statement simple = stmt.getSimple();
+      assignment_statement _assignment = simple.getAssignment();
       boolean _notEquals_1 = (!Objects.equal(_assignment, null));
       if (_notEquals_1) {
-        boolean _checkVariable = this.checkVariable(bloco, simples.getAssignment().getVariable(), true);
+        boolean _checkVariable = this.checkVariable(b, simple.getAssignment().getVariable(), true);
         if (_checkVariable) {
-          Type tipoVariavel = this.getType(bloco, simples.getAssignment().getVariable());
-          Type tipoExpressao = this.getType(bloco, simples.getAssignment().getExpression());
-          boolean _areTypesCompatibles = TypeInferer.areTypesCompatibles(tipoVariavel, tipoExpressao);
+          Type variableType = this.getType(b, simple.getAssignment().getVariable());
+          Type expressionType = this.getType(b, simple.getAssignment().getExpression());
+          boolean _areTypesCompatibles = TypeInferer.areTypesCompatibles(variableType, expressionType);
           boolean _not = (!_areTypesCompatibles);
           if (_not) {
-            this.insertError(simples.getAssignment(), ((((this.CANNOT_CONVERT_MESSAGE + tipoExpressao) + this.TO_MESSAGE) + tipoVariavel) + "."), ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.ASSIGNMENT_STATEMENT__EXPRESSION);
+            this.insertError(simple.getAssignment(), ((((this.CANNOT_CONVERT_MESSAGE + expressionType) + this.TO_MESSAGE) + variableType) + "."), ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.ASSIGNMENT_STATEMENT__EXPRESSION);
           } else {
-            this.removeError(simples.getAssignment(), ErrorType.TYPE_CONVERSION_ERROR);
+            this.removeError(simple.getAssignment(), ErrorType.TYPE_CONVERSION_ERROR);
           }
-          this.checkExpression(bloco, simples.getAssignment().getExpression());
-          Set<Variable> _get = this.variaveis.get(bloco);
-          String _name = simples.getAssignment().getVariable().getName();
+          this.checkExpression(b, simple.getAssignment().getExpression());
+          Set<Variable> _get = this.variaveis.get(b);
+          String _name = simple.getAssignment().getVariable().getName();
           Variable _variable = new Variable(_name);
-          Variable resultadoBusca = PascalValidator.<Variable>search(_get, _variable);
-          boolean _notEquals_2 = (!Objects.equal(resultadoBusca, null));
+          Variable v = PascalValidator.<Variable>search(_get, _variable);
+          boolean _notEquals_2 = (!Objects.equal(v, null));
           if (_notEquals_2) {
-            resultadoBusca.setValue(Integer.valueOf(0));
+            v.setValue(Integer.valueOf(0));
           }
         }
       } else {
-        function_designator _function = simples.getFunction();
+        function_designator _function = simple.getFunction();
         boolean _notEquals_3 = (!Objects.equal(_function, null));
         if (_notEquals_3) {
-          this.checkAbstractionCall(bloco, simples.getFunction(), false);
+          this.checkAbstractionCall(b, simple.getFunction(), false);
         }
       }
     } else {
-      structured_statement _structured = declaracao.getStructured();
+      structured_statement _structured = stmt.getStructured();
       boolean _notEquals_4 = (!Objects.equal(_structured, null));
       if (_notEquals_4) {
-        structured_statement estruturado = declaracao.getStructured();
-        conditional_statement _conditional = estruturado.getConditional();
+        structured_statement structured = stmt.getStructured();
+        conditional_statement _conditional = structured.getConditional();
         boolean _notEquals_5 = (!Objects.equal(_conditional, null));
         if (_notEquals_5) {
-          conditional_statement condicional = estruturado.getConditional();
-          if_statement _ifStmt = condicional.getIfStmt();
+          conditional_statement conditional = structured.getConditional();
+          if_statement _ifStmt = conditional.getIfStmt();
           boolean _notEquals_6 = (!Objects.equal(_ifStmt, null));
           if (_notEquals_6) {
-            if_statement declaracaoIf = condicional.getIfStmt();
-            this.checkExpression(bloco, declaracaoIf.getExpression());
-            boolean _equals = this.getType(bloco, declaracaoIf.getExpression()).getRealType().toLowerCase().equals(this.BOOLEAN);
+            if_statement ifStmt = conditional.getIfStmt();
+            this.checkExpression(b, ifStmt.getExpression());
+            boolean _equals = this.getType(b, ifStmt.getExpression()).getRealType().toLowerCase().equals(this.BOOLEAN);
             boolean _not_1 = (!_equals);
             if (_not_1) {
-              this.insertError(declaracaoIf, this.BOOL_ONLY, ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.IF_STATEMENT__EXPRESSION);
+              this.insertError(ifStmt, this.BOOL_ONLY, ErrorType.TYPE_CONVERSION_ERROR, PascalPackage.Literals.IF_STATEMENT__EXPRESSION);
             } else {
-              this.removeError(declaracaoIf.getExpression(), ErrorType.TYPE_CONVERSION_ERROR);
+              this.removeError(ifStmt.getExpression(), ErrorType.TYPE_CONVERSION_ERROR);
             }
-            this.checkStatement(bloco, declaracaoIf.getIfStatement());
-            statement _elseStatement = declaracaoIf.getElseStatement();
+            this.checkStatement(b, ifStmt.getIfStatement());
+            statement _elseStatement = ifStmt.getElseStatement();
             boolean _notEquals_7 = (!Objects.equal(_elseStatement, null));
             if (_notEquals_7) {
-              this.checkStatement(bloco, declaracaoIf.getElseStatement());
+              this.checkStatement(b, ifStmt.getElseStatement());
             }
           }
         }
@@ -1340,58 +1361,37 @@ public class PascalValidator extends AbstractPascalValidator {
     }
   }
   
-  public void checkStatements(final block bloco, final statement_sequence sequencia) {
-    EList<statement> _statements = sequencia.getStatements();
-    for (final statement declaracao : _statements) {
-      this.checkStatement(bloco, declaracao);
+  public void checkStatements(final block b, final statement_sequence sequence) {
+    EList<statement> _statements = sequence.getStatements();
+    for (final statement stmt : _statements) {
+      this.checkStatement(b, stmt);
     }
   }
   
-  public void checkBlock(final block bloco) {
-    this.checkStatements(bloco, bloco.getStatement().getSequence());
+  public void checkBlock(final block b) {
+    this.checkStatements(b, b.getStatement().getSequence());
+  }
+  
+  public boolean insertError(final EObject object, final String message, final ErrorType type, final EStructuralFeature feature) {
+    Set<org.xtext.ufcg.compiladores.validation.Error> _get = this.listaDeErrors.get(object);
+    org.xtext.ufcg.compiladores.validation.Error _error = new org.xtext.ufcg.compiladores.validation.Error(message, type, feature);
+    return _get.add(_error);
+  }
+  
+  public void removeError(final EObject object, final ErrorType type) {
+    Set<org.xtext.ufcg.compiladores.validation.Error> _get = this.listaDeErrors.get(object);
+    org.xtext.ufcg.compiladores.validation.Error _error = new org.xtext.ufcg.compiladores.validation.Error(type);
+    _get.remove(_error);
+    this.showError(object);
   }
   
   @Check
-  public Object preencherTabela(final program prog) {
-    Object _xblockexpression = null;
-    {
-      String nome = prog.getHeading().getName();
-      Object _xifexpression = null;
-      boolean _containsKey = PascalValidator.tabela_de_simbolos.containsKey(nome);
-      boolean _not = (!_containsKey);
-      if (_not) {
-        Object _xblockexpression_1 = null;
-        {
-          HashMap<String, Object> _hashMap = new HashMap<String, Object>();
-          PascalValidator.tabela_de_simbolos.put(nome, _hashMap);
-          PascalValidator.tabela_de_simbolos.get(nome).put("variables", this.variaveis);
-          PascalValidator.tabela_de_simbolos.get(nome).put("abstractions", this.procedimentos);
-          PascalValidator.tabela_de_simbolos.get(nome).put("types", this.mapaDeTipos);
-          _xblockexpression_1 = PascalValidator.tabela_de_simbolos.get(nome).put("calculatedTypes", this.mapaDeComparacoes);
-        }
-        _xifexpression = _xblockexpression_1;
-      }
-      _xblockexpression = _xifexpression;
-    }
-    return _xblockexpression;
-  }
-  
-  @Check
-  public void iniciarChecks(final block bloco) {
-    this.checkTypeRedeclaration(bloco);
-    this.checkAbstractionRedeclaration(bloco);
-    this.checkConstantRedeclaration(bloco);
-    this.checkVariableRedeclaration(bloco);
-    this.checkBlock(bloco);
-  }
-  
-  @Check
-  public void showError(final EObject objeto) {
-    boolean _containsKey = this.mapaDeErros.containsKey(objeto);
+  public void showError(final EObject obj) {
+    boolean _containsKey = this.listaDeErrors.containsKey(obj);
     if (_containsKey) {
-      Set<org.xtext.ufcg.compiladores.validation.Error> _get = this.mapaDeErros.get(objeto);
+      Set<org.xtext.ufcg.compiladores.validation.Error> _get = this.listaDeErrors.get(obj);
       for (final org.xtext.ufcg.compiladores.validation.Error err : _get) {
-        this.error(err.getMessage(), objeto, err.getFeature(), (-1));
+        this.error(err.getMessage(), obj, err.getFeature(), (-1));
       }
     }
   }

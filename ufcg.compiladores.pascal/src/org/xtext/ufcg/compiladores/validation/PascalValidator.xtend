@@ -86,7 +86,40 @@ class PascalValidator extends AbstractPascalValidator {
 	private final Map<block, Set<Type>> tipos = new AdaptativeHashMap<block, Type>(APIProvider.types);
 	// classe responsavel pela manipulacao de comparacoes
 	private final Map<EObject, Type> comparacoes = new HashMap<EObject, Type>();
- 
+	
+	////////////////////////////////////////////////////////////////////// 
+	//// Os checks estao aqui
+	
+	@Check
+	/*
+	 * Responsavel pelo preenchimento da tabela de simbolos pascal
+	 */
+	def preencherTabela(program prog) {
+		var name = prog.heading.name;
+		if (!tabela_de_simbolos.containsKey(name)) {
+			tabela_de_simbolos.put(name, new HashMap<String, Object>());
+			tabela_de_simbolos.get(name).put("variables", variaveis);
+			tabela_de_simbolos.get(name).put("abstractions", procedures);
+			tabela_de_simbolos.get(name).put("types", tipos);
+			tabela_de_simbolos.get(name).put("calculatedTypes", comparacoes);
+		}	
+	}
+	
+	@Check
+	/*
+	 * Inicia os checks basicos do sistema
+	 * Os outros checks estao sendo chamados dentro destes
+	 */
+	def iniciarChecks(block b) {
+		checkTypeRedeclaration(b);
+		checkAbstractionRedeclaration(b);
+		checkConstantRedeclaration(b);
+		checkVariableRedeclaration(b);
+		checkBlock(b); 
+	}
+	////////////////////////////////////////////////////////////////////// 
+	
+	// Procura elementos
 	def static <T extends Element> search(Set<T> elements, T key) {
 		for (T elemento : elements) {
 			if (elemento.equals(key))
@@ -95,6 +128,7 @@ class PascalValidator extends AbstractPascalValidator {
 		return null;	
 	}
 	
+	// Procura elementos, com verificacao de tipo
 	def static searchWithTypeCoersion(Set<Procedure> elements, Procedure key) {
 		var Procedure optimal = null; 
 		for (Procedure procedimento : elements) {
@@ -106,6 +140,7 @@ class PascalValidator extends AbstractPascalValidator {
 		return optimal;
 	}
 	 
+	// Procura elemento dado nome
 	def static Type searchByName(Set<Type> types, Type key) {
 		for (Type tipo : types) {
 			if (tipo.name.toLowerCase.equals(key.name.toLowerCase)) {
@@ -114,15 +149,7 @@ class PascalValidator extends AbstractPascalValidator {
 		}	
 		return null;
 	}
-	
-	def insertError(EObject object, String message, ErrorType type, EStructuralFeature feature) {
-		listaDeErrors.get(object).add(new Error(message, type, feature));
-	}
-	
-	def removeError(EObject object, ErrorType type) {
-		listaDeErrors.get(object).remove(new Error(type));
-		showError(object);
-	}  
+
 	 
 	def <T extends Element> clear(block b, ElementType type, Map<block, Set<T>> container) {
 		var newSet = new AdaptativeTreeSet<T>();
@@ -160,13 +187,18 @@ class PascalValidator extends AbstractPascalValidator {
 		return type;
 	}
 	
+	
+	// Retorna o tipo de elemento
 	def Type getType(block b, String type) {
 		if (type == null) return null;
+		// Verifica se o inicio da string contem o caracter ^
 		if (type.length > 1 && type.substring(0, 1).equals(POINTER)) {
 			return new ComposedType(getType(b, type.substring(1)), ComposedTypeKind.POINTER);
+		// Verifica se for array
 		} else if (type.length > 9 && type.substring(0, 9).equals(ARRAY)) {
 			return new ComposedType(getType(b, type.substring(9)), ComposedTypeKind.ARRAY);
 		}
+		// caso nao tenha sido um dos dois acima, vai para um nivel mais baixo
 		return new Type(type, false, getRealType(b, type));	
 	}
 	
@@ -174,6 +206,7 @@ class PascalValidator extends AbstractPascalValidator {
 		return new ComposedType(getType(b, type), kind);
 	}
 	
+	// Retorna o tipo da constante
 	def Type getType(block bloco, constant constante) {
 		var returnType = new Type(NIL);
 		if (constante.name != null) {
@@ -197,6 +230,7 @@ class PascalValidator extends AbstractPascalValidator {
 		return returnType;
 	}
 	
+	// Retorna o tipo composto, caso o elemento suporte
 	def Type getType(block b, parameter_type type) {
 		var returnType = new Type(NIL);
 		if (type.array != null) {
@@ -291,6 +325,7 @@ class PascalValidator extends AbstractPascalValidator {
 		return returnType;
 	}
 	
+	// tipo de retorno da funcao
 	def Type getType(block bloco, function_designator f) {
 		var returnType = new Type(NIL);
 		var function = getAbstraction(bloco, f);
@@ -302,6 +337,7 @@ class PascalValidator extends AbstractPascalValidator {
 		return returnType;
 	}
 	
+	// widden
 	def Type getType(block bloco, term termo) {
 		var Type greatestType = null; 
 		for (factor f : termo.factors) {
@@ -312,6 +348,7 @@ class PascalValidator extends AbstractPascalValidator {
 		return greatestType;
 	}
 	
+	//
 	def Type getType(block bloco, expression expressao) {
 		var returnType = new Type(NIL);
 		if (expressao.operators != null && !expressao.operators.empty) {
@@ -348,12 +385,12 @@ class PascalValidator extends AbstractPascalValidator {
 		return greatestType;
 	}
 	
-	def Type getType(block bloco, expression_list expressoes, boolean isCohese) {
+	def Type getType(block bloco, expression_list expressoes, boolean coeso) {
 		var Type greatestType = null;
 		var hasErrors = true;
 		for (expression expressao : expressoes.expressions) {
 			var type = getType(bloco, expressao);
-			if (isCohese) {
+			if (coeso) {
 				if (greatestType != null && TypeInferer.getTypeWeight(greatestType) < 0 && TypeInferer.getTypeWeight(type) >= 0 || 
 					TypeInferer.getTypeWeight(type) < 0 && TypeInferer.getTypeWeight(greatestType) >= 0) {
 					insertError(expressoes, CANNOT_CONVERT_MESSAGE + type +  TO_MESSAGE + greatestType + ".", ErrorType.TYPE_COHESION, PascalPackage.Literals.EXPRESSION_LIST__EXPRESSIONS);
@@ -463,11 +500,6 @@ class PascalValidator extends AbstractPascalValidator {
 		container.get(subblock).add(elemento);
 	}
 	 
-	
-	 
-	
-	
-	// TODO: Continuar renomear aqui
 	def getParameters(block b, abstraction_heading heading, block abstractionBlock) {
 		var parameters = new ArrayList<Variable>();
 		if (heading.parameters != null) {
@@ -657,6 +689,7 @@ class PascalValidator extends AbstractPascalValidator {
 		}
 	}
 	
+	// Verificacao de operadores
 	def void checkTerm(block b, term t) {
 		var isBoolean = false;
 		var isNumeric = false;
@@ -691,6 +724,7 @@ class PascalValidator extends AbstractPascalValidator {
 		}
 	}
 	
+	// Verificacao de expressoes
 	def void checkExpression(block b, expression expr) {
 		for (simple_expression s : expr.expressions) {
 			var isBoolean = false;
@@ -741,6 +775,7 @@ class PascalValidator extends AbstractPascalValidator {
 		}
 	}
 	
+	// Verificacao da declaracao de constantes
 	def checkConstant(block b, constant const) {
 		if (const.name != null) {
 			var searchVariable = search(variaveis.get(b), new Variable(const.name));
@@ -762,6 +797,7 @@ class PascalValidator extends AbstractPascalValidator {
 		}
 	}
 	
+	// Verificacao do escopo do if then else
 	def void checkStatement(block b, statement stmt) {
 		if (stmt.simple != null) {
 			var simple = stmt.simple;
@@ -815,38 +851,18 @@ class PascalValidator extends AbstractPascalValidator {
 		checkStatements(b, b.statement.sequence);
 	}
 	
-	
-	//// Os checks estao aqui
-	
-	@Check
-	/*
-	 * Responsavel pelo preenchimento da tabela de simbolos pascal
-	 */
-	def preencherTabela(program prog) {
-		var name = prog.heading.name;
-		if (!tabela_de_simbolos.containsKey(name)) {
-			tabela_de_simbolos.put(name, new HashMap<String, Object>());
-			tabela_de_simbolos.get(name).put("variables", variaveis);
-			tabela_de_simbolos.get(name).put("abstractions", procedures);
-			tabela_de_simbolos.get(name).put("types", tipos);
-			tabela_de_simbolos.get(name).put("calculatedTypes", comparacoes);
-		}	
+	////////////////////////////////////////////////////////////////////// 
+	// Funcoes para manipulacao de erros gerados devido a erros de tipo // 
+	def insertError(EObject object, String message, ErrorType type, EStructuralFeature feature) {
+		listaDeErrors.get(object).add(new Error(message, type, feature));
 	}
 	
-	@Check
-	/*
-	 * Inicia os checks basicos do sistema
-	 * Os outros checks estao sendo chamados dentro destes testes
-	 */
-	def iniciarChecks(block b) {
-		checkTypeRedeclaration(b);
-		checkAbstractionRedeclaration(b);
-		checkConstantRedeclaration(b);
-		checkVariableRedeclaration(b);
-		checkBlock(b); 
+	def removeError(EObject object, ErrorType type) {
+		listaDeErrors.get(object).remove(new Error(type));
+		showError(object);
 	}
 	
-	@Check
+		@Check
 	def showError(EObject obj) {
 		if (listaDeErrors.containsKey(obj)) {
 			for (Error err : listaDeErrors.get(obj)) {
@@ -855,5 +871,7 @@ class PascalValidator extends AbstractPascalValidator {
 			
 		} 
 	}
-	
+	//////////////////////////////////////////////////////////////////////  
+
+
 }	
