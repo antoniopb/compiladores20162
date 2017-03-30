@@ -6533,9 +6533,9 @@ rule__Case_statement__Group__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getCase_statementAccess().getExpressionParserRuleCall_1()); }
-	ruleexpression
-	{ after(grammarAccess.getCase_statementAccess().getExpressionParserRuleCall_1()); }
+	{ before(grammarAccess.getCase_statementAccess().getExpressionAssignment_1()); }
+	(rule__Case_statement__ExpressionAssignment_1)
+	{ after(grammarAccess.getCase_statementAccess().getExpressionAssignment_1()); }
 )
 ;
 finally {
@@ -11392,6 +11392,21 @@ rule__If_statement__ElseStatementAssignment_4_1
 		{ before(grammarAccess.getIf_statementAccess().getElseStatementStatementParserRuleCall_4_1_0()); }
 		rulestatement
 		{ after(grammarAccess.getIf_statementAccess().getElseStatementStatementParserRuleCall_4_1_0()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__Case_statement__ExpressionAssignment_1
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getCase_statementAccess().getExpressionExpressionParserRuleCall_1_0()); }
+		ruleexpression
+		{ after(grammarAccess.getCase_statementAccess().getExpressionExpressionParserRuleCall_1_0()); }
 	)
 ;
 finally {

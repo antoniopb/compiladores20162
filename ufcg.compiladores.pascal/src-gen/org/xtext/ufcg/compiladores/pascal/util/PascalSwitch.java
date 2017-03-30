@@ -365,7 +365,6 @@ public class PascalSwitch<T> extends Switch<T>
       {
         expression expression = (expression)theEObject;
         T result = caseexpression(expression);
-        if (result == null) result = casecase_statement(expression);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }

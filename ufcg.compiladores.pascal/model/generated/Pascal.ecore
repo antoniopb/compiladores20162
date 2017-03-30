@@ -224,7 +224,12 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="elseStatement" eType="#//statement"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="case_statement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="case_statement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expression" eType="#//expression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="case_limbs" upperBound="-1"
+        eType="#//case_limb" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="case_limb">
     <eStructuralFeatures xsi:type="ecore:EReference" name="case_list" eType="#//case_label_list"
         containment="true"/>
@@ -242,9 +247,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="stmt" eType="#//statement"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="expression" eSuperTypes="#//case_statement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="case_limbs" upperBound="-1"
-        eType="#//case_limb" containment="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="expressions" upperBound="-1"
         eType="#//simple_expression" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="operators" unique="false"

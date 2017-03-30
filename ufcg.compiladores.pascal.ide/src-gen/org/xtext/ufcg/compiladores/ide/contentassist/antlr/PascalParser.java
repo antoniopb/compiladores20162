@@ -243,6 +243,7 @@ public class PascalParser extends AbstractContentAssistParser {
 					put(grammarAccess.getIf_statementAccess().getExpressionAssignment_1(), "rule__If_statement__ExpressionAssignment_1");
 					put(grammarAccess.getIf_statementAccess().getIfStatementAssignment_3(), "rule__If_statement__IfStatementAssignment_3");
 					put(grammarAccess.getIf_statementAccess().getElseStatementAssignment_4_1(), "rule__If_statement__ElseStatementAssignment_4_1");
+					put(grammarAccess.getCase_statementAccess().getExpressionAssignment_1(), "rule__Case_statement__ExpressionAssignment_1");
 					put(grammarAccess.getCase_statementAccess().getCase_limbsAssignment_3(), "rule__Case_statement__Case_limbsAssignment_3");
 					put(grammarAccess.getCase_statementAccess().getCase_limbsAssignment_4_1(), "rule__Case_statement__Case_limbsAssignment_4_1");
 					put(grammarAccess.getCase_limbAccess().getCase_listAssignment_0(), "rule__Case_limb__Case_listAssignment_0");

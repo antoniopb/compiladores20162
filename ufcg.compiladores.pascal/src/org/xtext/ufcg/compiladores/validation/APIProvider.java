@@ -75,7 +75,7 @@ public class APIProvider {
 	
 	private static void setStandardAbstractions(Set<Procedure> it) {
 		addAbstraction(it, "round", "integer", "real"); 
-		addAbstraction(it, "chr", "char", "integer");
+		addAbstraction(it, "chr", "char", "integer", "string");
 		addAbstraction(it, "abs", "reflect", "numeric");
 		addAbstraction(it, "odd", "boolean", "integer");
 		addAbstraction(it, "sqr", "reflect", "numeric");
@@ -129,6 +129,7 @@ public class APIProvider {
 		standardTypes.add(new Type("longint"));
 		standardTypes.add(new Type("boolean"));
 		standardTypes.add(new Type("char")); 
+		standardTypes.add(new Type("string")); 
 		return standardTypes;
 	}
 	

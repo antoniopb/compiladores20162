@@ -270,8 +270,6 @@ class PascalValidator extends AbstractPascalValidator {
 			var unpacked = structured.type;
 			if (unpacked.array != null) {
 				returnType = new ComposedType(getType(b, unpacked.array.type), ComposedTypeKind.ARRAY);
-			} else if (unpacked.record != null) {
-				returnType = new Type(RECORD);
 			} else if (unpacked.set != null) {
 				returnType = getType(b, unpacked.set.type);
 			} else if (unpacked.file != null) {

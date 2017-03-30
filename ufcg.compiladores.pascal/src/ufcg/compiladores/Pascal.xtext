@@ -154,46 +154,46 @@ compound_statement:
 	"begin" stmt_seq=statement_sequence "end"
 ;
 
-repetitive_statement:
+repetitive_statement: // regras adicionadas, mas nao funciona
 	while=while_statement
 	| repeat=repeat_statement
 	| for=for_statement
 ;
 
-while_statement:
+while_statement: // regra adicionada, mas nao funciona a analise
 	"while" expression=expression "do" statement=statement
 ;
 
-repeat_statement:
+repeat_statement: // regra adicionada, mas nao funciona a analise
 	"repeat" stmt_seq=statement_sequence "until" expression=expression
 ;
 
-for_statement:
+for_statement: // regra adicionada, mas nao funciona a analise
 	"for" initID=ID ":=" expressionInit=expression ("to" | "downto") expressionFin=expression "do" stmt=statement
 ;
 
 conditional_statement: 
 	ifStmt=if_statement // Para o escopo, somente if then else
-	| caseStmt=case_statement
+	| caseStmt=case_statement // regra por place holder, nao funciona
 ;
 
-if_statement:
+if_statement: // todas as outras regras foram colocadas, mas somente a analise do if then else foi feita
 	"if" expression=expression "then" ifStatement=statement ( "else" elseStatement=statement )	?
 ;
 
-case_statement:
-	"case" expression "of" case_limbs+=case_limb (";" case_limbs+=case_limb)* ";" "end"
+case_statement: // regra adicionada, mas nao funciona a analise
+	"case" expression=expression "of" case_limbs+=case_limb (";" case_limbs+=case_limb)* ";" "end"
 ;
 
-case_limb:
+case_limb: // regra adicionada, mas nao funciona a analise
 	case_list=case_label_list ":" stmt=statement
 ;
 
-case_label_list:
+case_label_list: // regra adicionada, mas nao funciona a analise
 	constants+=constant ("," constants+=constant)*	
 ;
 
-with_statement:
+with_statement: // regra adicionada, mas nao funciona a analise
 	"with" record=ID ("," records+=ID)* "do" stmt=statement
 ;
 

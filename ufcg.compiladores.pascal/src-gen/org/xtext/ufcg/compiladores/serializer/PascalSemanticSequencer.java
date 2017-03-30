@@ -24,6 +24,7 @@ import org.xtext.ufcg.compiladores.pascal.block;
 import org.xtext.ufcg.compiladores.pascal.bound_specification;
 import org.xtext.ufcg.compiladores.pascal.case_label_list;
 import org.xtext.ufcg.compiladores.pascal.case_limb;
+import org.xtext.ufcg.compiladores.pascal.case_statement;
 import org.xtext.ufcg.compiladores.pascal.compound_statement;
 import org.xtext.ufcg.compiladores.pascal.conditional_statement;
 import org.xtext.ufcg.compiladores.pascal.conformant_array_schema;
@@ -157,6 +158,9 @@ public class PascalSemanticSequencer extends AbstractDelegatingSemanticSequencer
 			case PascalPackage.CASE_LIMB:
 				sequence_case_limb(context, (case_limb) semanticObject); 
 				return; 
+			case PascalPackage.CASE_STATEMENT:
+				sequence_case_statement(context, (case_statement) semanticObject); 
+				return; 
 			case PascalPackage.COMPOUND_STATEMENT:
 				sequence_compound_statement(context, (compound_statement) semanticObject); 
 				return; 
@@ -182,15 +186,8 @@ public class PascalSemanticSequencer extends AbstractDelegatingSemanticSequencer
 				sequence_enumerated_type(context, (enumerated_type) semanticObject); 
 				return; 
 			case PascalPackage.EXPRESSION:
-				if (rule == grammarAccess.getCase_statementRule()) {
-					sequence_case_statement_expression(context, (expression) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getExpressionRule()) {
-					sequence_expression(context, (expression) semanticObject); 
-					return; 
-				}
-				else break;
+				sequence_expression(context, (expression) semanticObject); 
+				return; 
 			case PascalPackage.EXPRESSION_LIST:
 				sequence_expression_list(context, (expression_list) semanticObject); 
 				return; 
@@ -471,17 +468,12 @@ public class PascalSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Contexts:
-	 *     case_statement returns expression
+	 *     case_statement returns case_statement
 	 *
 	 * Constraint:
-	 *     (
-	 *         expressions+=simple_expression 
-	 *         ((operators+=RELATIONAL_OPERATOR | operators+='in' | operators+='=') expressions+=simple_expression)? 
-	 *         case_limbs+=case_limb 
-	 *         case_limbs+=case_limb*
-	 *     )
+	 *     (expression=expression case_limbs+=case_limb case_limbs+=case_limb*)
 	 */
-	protected void sequence_case_statement_expression(ISerializationContext context, expression semanticObject) {
+	protected void sequence_case_statement(ISerializationContext context, case_statement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

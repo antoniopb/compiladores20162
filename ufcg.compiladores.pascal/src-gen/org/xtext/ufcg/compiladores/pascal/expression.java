@@ -5,6 +5,8 @@ package org.xtext.ufcg.compiladores.pascal;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.emf.ecore.EObject;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>expression</b></em>'.
@@ -14,7 +16,6 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.xtext.ufcg.compiladores.pascal.expression#getCase_limbs <em>Case limbs</em>}</li>
  *   <li>{@link org.xtext.ufcg.compiladores.pascal.expression#getExpressions <em>Expressions</em>}</li>
  *   <li>{@link org.xtext.ufcg.compiladores.pascal.expression#getOperators <em>Operators</em>}</li>
  * </ul>
@@ -23,24 +24,8 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface expression extends case_statement
+public interface expression extends EObject
 {
-  /**
-   * Returns the value of the '<em><b>Case limbs</b></em>' containment reference list.
-   * The list contents are of type {@link org.xtext.ufcg.compiladores.pascal.case_limb}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Case limbs</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Case limbs</em>' containment reference list.
-   * @see org.xtext.ufcg.compiladores.pascal.PascalPackage#getexpression_Case_limbs()
-   * @model containment="true"
-   * @generated
-   */
-  EList<case_limb> getCase_limbs();
-
   /**
    * Returns the value of the '<em><b>Expressions</b></em>' containment reference list.
    * The list contents are of type {@link org.xtext.ufcg.compiladores.pascal.simple_expression}.

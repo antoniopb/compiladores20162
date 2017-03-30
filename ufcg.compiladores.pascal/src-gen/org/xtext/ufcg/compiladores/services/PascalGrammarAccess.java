@@ -1276,9 +1276,11 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		//	| for=for_statement;
 		@Override public ParserRule getRule() { return rule; }
 		
+		//// regras adicionadas, mas nao funciona
 		//while=while_statement | repeat=repeat_statement | for=for_statement
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
+		//// regras adicionadas, mas nao funciona
 		//while=while_statement
 		public Assignment getWhileAssignment_0() { return cWhileAssignment_0; }
 		
@@ -1307,13 +1309,15 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cStatementAssignment_3 = (Assignment)cGroup.eContents().get(3);
 		private final RuleCall cStatementStatementParserRuleCall_3_0 = (RuleCall)cStatementAssignment_3.eContents().get(0);
 		
-		//while_statement:
+		//while_statement: // regra adicionada, mas nao funciona a analise
 		//	"while" expression=expression "do" statement=statement;
 		@Override public ParserRule getRule() { return rule; }
 		
+		//// regra adicionada, mas nao funciona a analise
 		//"while" expression=expression "do" statement=statement
 		public Group getGroup() { return cGroup; }
 		
+		//// regra adicionada, mas nao funciona a analise
 		//"while"
 		public Keyword getWhileKeyword_0() { return cWhileKeyword_0; }
 		
@@ -1342,13 +1346,15 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cExpressionAssignment_3 = (Assignment)cGroup.eContents().get(3);
 		private final RuleCall cExpressionExpressionParserRuleCall_3_0 = (RuleCall)cExpressionAssignment_3.eContents().get(0);
 		
-		//repeat_statement:
+		//repeat_statement: // regra adicionada, mas nao funciona a analise
 		//	"repeat" stmt_seq=statement_sequence "until" expression=expression;
 		@Override public ParserRule getRule() { return rule; }
 		
+		//// regra adicionada, mas nao funciona a analise
 		//"repeat" stmt_seq=statement_sequence "until" expression=expression
 		public Group getGroup() { return cGroup; }
 		
+		//// regra adicionada, mas nao funciona a analise
 		//"repeat"
 		public Keyword getRepeatKeyword_0() { return cRepeatKeyword_0; }
 		
@@ -1385,13 +1391,15 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cStmtAssignment_7 = (Assignment)cGroup.eContents().get(7);
 		private final RuleCall cStmtStatementParserRuleCall_7_0 = (RuleCall)cStmtAssignment_7.eContents().get(0);
 		
-		//for_statement:
+		//for_statement: // regra adicionada, mas nao funciona a analise
 		//	"for" initID=ID ":=" expressionInit=expression ("to" | "downto") expressionFin=expression "do" stmt=statement;
 		@Override public ParserRule getRule() { return rule; }
 		
+		//// regra adicionada, mas nao funciona a analise
 		//"for" initID=ID ":=" expressionInit=expression ("to" | "downto") expressionFin=expression "do" stmt=statement
 		public Group getGroup() { return cGroup; }
 		
+		//// regra adicionada, mas nao funciona a analise
 		//"for"
 		public Keyword getForKeyword_0() { return cForKeyword_0; }
 		
@@ -1444,7 +1452,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//conditional_statement:
 		//	ifStmt=if_statement // Para o escopo, somente if then else
-		//	| caseStmt=case_statement;
+		//	| caseStmt=case_statement // regra por place holder, nao funciona
+		//;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//ifStmt=if_statement // Para o escopo, somente if then else
@@ -1477,13 +1486,15 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cElseStatementAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
 		private final RuleCall cElseStatementStatementParserRuleCall_4_1_0 = (RuleCall)cElseStatementAssignment_4_1.eContents().get(0);
 		
-		//if_statement:
+		//if_statement: // todas as outras regras foram colocadas, mas somente a analise do if then else foi feita
 		//	"if" expression=expression "then" ifStatement=statement ("else" elseStatement=statement)?;
 		@Override public ParserRule getRule() { return rule; }
 		
+		//// todas as outras regras foram colocadas, mas somente a analise do if then else foi feita
 		//"if" expression=expression "then" ifStatement=statement ("else" elseStatement=statement)?
 		public Group getGroup() { return cGroup; }
 		
+		//// todas as outras regras foram colocadas, mas somente a analise do if then else foi feita
 		//"if"
 		public Keyword getIfKeyword_0() { return cIfKeyword_0; }
 		
@@ -1518,7 +1529,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.xtext.ufcg.compiladores.Pascal.case_statement");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Keyword cCaseKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final RuleCall cExpressionParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		private final Assignment cExpressionAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cExpressionExpressionParserRuleCall_1_0 = (RuleCall)cExpressionAssignment_1.eContents().get(0);
 		private final Keyword cOfKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		private final Assignment cCase_limbsAssignment_3 = (Assignment)cGroup.eContents().get(3);
 		private final RuleCall cCase_limbsCase_limbParserRuleCall_3_0 = (RuleCall)cCase_limbsAssignment_3.eContents().get(0);
@@ -1529,18 +1541,23 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cSemicolonKeyword_5 = (Keyword)cGroup.eContents().get(5);
 		private final Keyword cEndKeyword_6 = (Keyword)cGroup.eContents().get(6);
 		
-		//case_statement:
-		//	"case" expression "of" case_limbs+=case_limb (";" case_limbs+=case_limb)* ";" "end";
+		//case_statement: // regra adicionada, mas nao funciona a analise
+		//	"case" expression=expression "of" case_limbs+=case_limb (";" case_limbs+=case_limb)* ";" "end";
 		@Override public ParserRule getRule() { return rule; }
 		
-		//"case" expression "of" case_limbs+=case_limb (";" case_limbs+=case_limb)* ";" "end"
+		//// regra adicionada, mas nao funciona a analise
+		//"case" expression=expression "of" case_limbs+=case_limb (";" case_limbs+=case_limb)* ";" "end"
 		public Group getGroup() { return cGroup; }
 		
+		//// regra adicionada, mas nao funciona a analise
 		//"case"
 		public Keyword getCaseKeyword_0() { return cCaseKeyword_0; }
 		
+		//expression=expression
+		public Assignment getExpressionAssignment_1() { return cExpressionAssignment_1; }
+		
 		//expression
-		public RuleCall getExpressionParserRuleCall_1() { return cExpressionParserRuleCall_1; }
+		public RuleCall getExpressionExpressionParserRuleCall_1_0() { return cExpressionExpressionParserRuleCall_1_0; }
 		
 		//"of"
 		public Keyword getOfKeyword_2() { return cOfKeyword_2; }
@@ -1582,9 +1599,11 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		//	case_list=case_label_list ":" stmt=statement;
 		@Override public ParserRule getRule() { return rule; }
 		
+		//// regra adicionada, mas nao funciona a analise
 		//case_list=case_label_list ":" stmt=statement
 		public Group getGroup() { return cGroup; }
 		
+		//// regra adicionada, mas nao funciona a analise
 		//case_list=case_label_list
 		public Assignment getCase_listAssignment_0() { return cCase_listAssignment_0; }
 		
@@ -1614,9 +1633,11 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		//	constants+=constant ("," constants+=constant)*;
 		@Override public ParserRule getRule() { return rule; }
 		
+		//// regra adicionada, mas nao funciona a analise
 		//constants+=constant ("," constants+=constant)*
 		public Group getGroup() { return cGroup; }
 		
+		//// regra adicionada, mas nao funciona a analise
 		//constants+=constant
 		public Assignment getConstantsAssignment_0() { return cConstantsAssignment_0; }
 		
@@ -1649,13 +1670,15 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cStmtAssignment_4 = (Assignment)cGroup.eContents().get(4);
 		private final RuleCall cStmtStatementParserRuleCall_4_0 = (RuleCall)cStmtAssignment_4.eContents().get(0);
 		
-		//with_statement:
+		//with_statement: // regra adicionada, mas nao funciona a analise
 		//	"with" record=ID ("," records+=ID)* "do" stmt=statement;
 		@Override public ParserRule getRule() { return rule; }
 		
+		//// regra adicionada, mas nao funciona a analise
 		//"with" record=ID ("," records+=ID)* "do" stmt=statement
 		public Group getGroup() { return cGroup; }
 		
+		//// regra adicionada, mas nao funciona a analise
 		//"with"
 		public Keyword getWithKeyword_0() { return cWithKeyword_0; }
 		
@@ -3790,7 +3813,7 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		return getRepetitive_statementAccess().getRule();
 	}
 	
-	//while_statement:
+	//while_statement: // regra adicionada, mas nao funciona a analise
 	//	"while" expression=expression "do" statement=statement;
 	public While_statementElements getWhile_statementAccess() {
 		return pWhile_statement;
@@ -3800,7 +3823,7 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		return getWhile_statementAccess().getRule();
 	}
 	
-	//repeat_statement:
+	//repeat_statement: // regra adicionada, mas nao funciona a analise
 	//	"repeat" stmt_seq=statement_sequence "until" expression=expression;
 	public Repeat_statementElements getRepeat_statementAccess() {
 		return pRepeat_statement;
@@ -3810,7 +3833,7 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		return getRepeat_statementAccess().getRule();
 	}
 	
-	//for_statement:
+	//for_statement: // regra adicionada, mas nao funciona a analise
 	//	"for" initID=ID ":=" expressionInit=expression ("to" | "downto") expressionFin=expression "do" stmt=statement;
 	public For_statementElements getFor_statementAccess() {
 		return pFor_statement;
@@ -3822,7 +3845,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//conditional_statement:
 	//	ifStmt=if_statement // Para o escopo, somente if then else
-	//	| caseStmt=case_statement;
+	//	| caseStmt=case_statement // regra por place holder, nao funciona
+	//;
 	public Conditional_statementElements getConditional_statementAccess() {
 		return pConditional_statement;
 	}
@@ -3831,7 +3855,7 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		return getConditional_statementAccess().getRule();
 	}
 	
-	//if_statement:
+	//if_statement: // todas as outras regras foram colocadas, mas somente a analise do if then else foi feita
 	//	"if" expression=expression "then" ifStatement=statement ("else" elseStatement=statement)?;
 	public If_statementElements getIf_statementAccess() {
 		return pIf_statement;
@@ -3841,8 +3865,8 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		return getIf_statementAccess().getRule();
 	}
 	
-	//case_statement:
-	//	"case" expression "of" case_limbs+=case_limb (";" case_limbs+=case_limb)* ";" "end";
+	//case_statement: // regra adicionada, mas nao funciona a analise
+	//	"case" expression=expression "of" case_limbs+=case_limb (";" case_limbs+=case_limb)* ";" "end";
 	public Case_statementElements getCase_statementAccess() {
 		return pCase_statement;
 	}
@@ -3871,7 +3895,7 @@ public class PascalGrammarAccess extends AbstractGrammarElementFinder {
 		return getCase_label_listAccess().getRule();
 	}
 	
-	//with_statement:
+	//with_statement: // regra adicionada, mas nao funciona a analise
 	//	"with" record=ID ("," records+=ID)* "do" stmt=statement;
 	public With_statementElements getWith_statementAccess() {
 		return pWith_statement;

@@ -40,7 +40,6 @@ import org.xtext.ufcg.compiladores.pascal.parameter_type;
 import org.xtext.ufcg.compiladores.pascal.pointer_type;
 import org.xtext.ufcg.compiladores.pascal.procedure_and_function_declaration_part;
 import org.xtext.ufcg.compiladores.pascal.program;
-import org.xtext.ufcg.compiladores.pascal.record_type;
 import org.xtext.ufcg.compiladores.pascal.set;
 import org.xtext.ufcg.compiladores.pascal.set_type;
 import org.xtext.ufcg.compiladores.pascal.simple_expression;
@@ -434,31 +433,24 @@ public class PascalValidator extends AbstractPascalValidator {
           ComposedType _composedType = new ComposedType(_type_2, ComposedTypeKind.ARRAY);
           returnType = _composedType;
         } else {
-          record_type _record = unpacked.getRecord();
-          boolean _notEquals_4 = (!Objects.equal(_record, null));
+          set_type _set = unpacked.getSet();
+          boolean _notEquals_4 = (!Objects.equal(_set, null));
           if (_notEquals_4) {
-            Type _type_3 = new Type(this.RECORD);
-            returnType = _type_3;
+            returnType = this.getType(b, unpacked.getSet().getType());
           } else {
-            set_type _set = unpacked.getSet();
-            boolean _notEquals_5 = (!Objects.equal(_set, null));
+            file_type _file = unpacked.getFile();
+            boolean _notEquals_5 = (!Objects.equal(_file, null));
             if (_notEquals_5) {
-              returnType = this.getType(b, unpacked.getSet().getType());
-            } else {
-              file_type _file = unpacked.getFile();
-              boolean _notEquals_6 = (!Objects.equal(_file, null));
-              if (_notEquals_6) {
-                returnType = this.getType(b, unpacked.getFile().getType());
-              }
+              returnType = this.getType(b, unpacked.getFile().getType());
             }
           }
         }
       } else {
         pointer_type _pointer = type.getPointer();
-        boolean _notEquals_7 = (!Objects.equal(_pointer, null));
-        if (_notEquals_7) {
-          Type _type_4 = this.getType(b, type.getPointer().getType());
-          ComposedType _composedType_1 = new ComposedType(_type_4, ComposedTypeKind.POINTER);
+        boolean _notEquals_6 = (!Objects.equal(_pointer, null));
+        if (_notEquals_6) {
+          Type _type_3 = this.getType(b, type.getPointer().getType());
+          ComposedType _composedType_1 = new ComposedType(_type_3, ComposedTypeKind.POINTER);
           returnType = _composedType_1;
         }
       }

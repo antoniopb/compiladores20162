@@ -12,12 +12,13 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
 import org.eclipse.emf.ecore.util.EDataTypeEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.xtext.ufcg.compiladores.pascal.PascalPackage;
-import org.xtext.ufcg.compiladores.pascal.case_limb;
 import org.xtext.ufcg.compiladores.pascal.expression;
 import org.xtext.ufcg.compiladores.pascal.simple_expression;
 
@@ -29,25 +30,14 @@ import org.xtext.ufcg.compiladores.pascal.simple_expression;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.xtext.ufcg.compiladores.pascal.impl.expressionImpl#getCase_limbs <em>Case limbs</em>}</li>
  *   <li>{@link org.xtext.ufcg.compiladores.pascal.impl.expressionImpl#getExpressions <em>Expressions</em>}</li>
  *   <li>{@link org.xtext.ufcg.compiladores.pascal.impl.expressionImpl#getOperators <em>Operators</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class expressionImpl extends case_statementImpl implements expression
+public class expressionImpl extends MinimalEObjectImpl.Container implements expression
 {
-  /**
-   * The cached value of the '{@link #getCase_limbs() <em>Case limbs</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getCase_limbs()
-   * @generated
-   * @ordered
-   */
-  protected EList<case_limb> case_limbs;
-
   /**
    * The cached value of the '{@link #getExpressions() <em>Expressions</em>}' containment reference list.
    * <!-- begin-user-doc -->
@@ -94,20 +84,6 @@ public class expressionImpl extends case_statementImpl implements expression
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<case_limb> getCase_limbs()
-  {
-    if (case_limbs == null)
-    {
-      case_limbs = new EObjectContainmentEList<case_limb>(case_limb.class, this, PascalPackage.EXPRESSION__CASE_LIMBS);
-    }
-    return case_limbs;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EList<simple_expression> getExpressions()
   {
     if (expressions == null)
@@ -141,8 +117,6 @@ public class expressionImpl extends case_statementImpl implements expression
   {
     switch (featureID)
     {
-      case PascalPackage.EXPRESSION__CASE_LIMBS:
-        return ((InternalEList<?>)getCase_limbs()).basicRemove(otherEnd, msgs);
       case PascalPackage.EXPRESSION__EXPRESSIONS:
         return ((InternalEList<?>)getExpressions()).basicRemove(otherEnd, msgs);
     }
@@ -159,8 +133,6 @@ public class expressionImpl extends case_statementImpl implements expression
   {
     switch (featureID)
     {
-      case PascalPackage.EXPRESSION__CASE_LIMBS:
-        return getCase_limbs();
       case PascalPackage.EXPRESSION__EXPRESSIONS:
         return getExpressions();
       case PascalPackage.EXPRESSION__OPERATORS:
@@ -180,10 +152,6 @@ public class expressionImpl extends case_statementImpl implements expression
   {
     switch (featureID)
     {
-      case PascalPackage.EXPRESSION__CASE_LIMBS:
-        getCase_limbs().clear();
-        getCase_limbs().addAll((Collection<? extends case_limb>)newValue);
-        return;
       case PascalPackage.EXPRESSION__EXPRESSIONS:
         getExpressions().clear();
         getExpressions().addAll((Collection<? extends simple_expression>)newValue);
@@ -206,9 +174,6 @@ public class expressionImpl extends case_statementImpl implements expression
   {
     switch (featureID)
     {
-      case PascalPackage.EXPRESSION__CASE_LIMBS:
-        getCase_limbs().clear();
-        return;
       case PascalPackage.EXPRESSION__EXPRESSIONS:
         getExpressions().clear();
         return;
@@ -229,8 +194,6 @@ public class expressionImpl extends case_statementImpl implements expression
   {
     switch (featureID)
     {
-      case PascalPackage.EXPRESSION__CASE_LIMBS:
-        return case_limbs != null && !case_limbs.isEmpty();
       case PascalPackage.EXPRESSION__EXPRESSIONS:
         return expressions != null && !expressions.isEmpty();
       case PascalPackage.EXPRESSION__OPERATORS:

@@ -2824,14 +2824,25 @@ rulecase_statement returns [EObject current=null]
 		{
 			newLeafNode(otherlv_0, grammarAccess.getCase_statementAccess().getCaseKeyword_0());
 		}
-		{
-			newCompositeNode(grammarAccess.getCase_statementAccess().getExpressionParserRuleCall_1());
-		}
-		this_expression_1=ruleexpression
-		{
-			$current = $this_expression_1.current;
-			afterParserOrEnumRuleCall();
-		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getCase_statementAccess().getExpressionExpressionParserRuleCall_1_0());
+				}
+				lv_expression_1_0=ruleexpression
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getCase_statementRule());
+					}
+					set(
+						$current,
+						"expression",
+						lv_expression_1_0,
+						"org.xtext.ufcg.compiladores.Pascal.expression");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
 		otherlv_2='of'
 		{
 			newLeafNode(otherlv_2, grammarAccess.getCase_statementAccess().getOfKeyword_2());

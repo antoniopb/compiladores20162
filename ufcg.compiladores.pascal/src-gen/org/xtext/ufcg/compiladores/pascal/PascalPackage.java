@@ -1527,13 +1527,31 @@ public interface PascalPackage extends EPackage
   int CASE_STATEMENT = 37;
 
   /**
+   * The feature id for the '<em><b>Expression</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CASE_STATEMENT__EXPRESSION = 0;
+
+  /**
+   * The feature id for the '<em><b>Case limbs</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CASE_STATEMENT__CASE_LIMBS = 1;
+
+  /**
    * The number of structural features of the '<em>case statement</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int CASE_STATEMENT_FEATURE_COUNT = 0;
+  int CASE_STATEMENT_FEATURE_COUNT = 2;
 
   /**
    * The meta object id for the '{@link org.xtext.ufcg.compiladores.pascal.impl.case_limbImpl <em>case limb</em>}' class.
@@ -1657,22 +1675,13 @@ public interface PascalPackage extends EPackage
   int EXPRESSION = 41;
 
   /**
-   * The feature id for the '<em><b>Case limbs</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int EXPRESSION__CASE_LIMBS = CASE_STATEMENT_FEATURE_COUNT + 0;
-
-  /**
    * The feature id for the '<em><b>Expressions</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int EXPRESSION__EXPRESSIONS = CASE_STATEMENT_FEATURE_COUNT + 1;
+  int EXPRESSION__EXPRESSIONS = 0;
 
   /**
    * The feature id for the '<em><b>Operators</b></em>' attribute list.
@@ -1681,7 +1690,7 @@ public interface PascalPackage extends EPackage
    * @generated
    * @ordered
    */
-  int EXPRESSION__OPERATORS = CASE_STATEMENT_FEATURE_COUNT + 2;
+  int EXPRESSION__OPERATORS = 1;
 
   /**
    * The number of structural features of the '<em>expression</em>' class.
@@ -1690,7 +1699,7 @@ public interface PascalPackage extends EPackage
    * @generated
    * @ordered
    */
-  int EXPRESSION_FEATURE_COUNT = CASE_STATEMENT_FEATURE_COUNT + 3;
+  int EXPRESSION_FEATURE_COUNT = 2;
 
   /**
    * The meta object id for the '{@link org.xtext.ufcg.compiladores.pascal.impl.simple_expressionImpl <em>simple expression</em>}' class.
@@ -4229,6 +4238,28 @@ public interface PascalPackage extends EPackage
   EClass getcase_statement();
 
   /**
+   * Returns the meta object for the containment reference '{@link org.xtext.ufcg.compiladores.pascal.case_statement#getExpression <em>Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Expression</em>'.
+   * @see org.xtext.ufcg.compiladores.pascal.case_statement#getExpression()
+   * @see #getcase_statement()
+   * @generated
+   */
+  EReference getcase_statement_Expression();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link org.xtext.ufcg.compiladores.pascal.case_statement#getCase_limbs <em>Case limbs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Case limbs</em>'.
+   * @see org.xtext.ufcg.compiladores.pascal.case_statement#getCase_limbs()
+   * @see #getcase_statement()
+   * @generated
+   */
+  EReference getcase_statement_Case_limbs();
+
+  /**
    * Returns the meta object for class '{@link org.xtext.ufcg.compiladores.pascal.case_limb <em>case limb</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -4333,17 +4364,6 @@ public interface PascalPackage extends EPackage
    * @generated
    */
   EClass getexpression();
-
-  /**
-   * Returns the meta object for the containment reference list '{@link org.xtext.ufcg.compiladores.pascal.expression#getCase_limbs <em>Case limbs</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Case limbs</em>'.
-   * @see org.xtext.ufcg.compiladores.pascal.expression#getCase_limbs()
-   * @see #getexpression()
-   * @generated
-   */
-  EReference getexpression_Case_limbs();
 
   /**
    * Returns the meta object for the containment reference list '{@link org.xtext.ufcg.compiladores.pascal.expression#getExpressions <em>Expressions</em>}'.
@@ -6554,6 +6574,22 @@ public interface PascalPackage extends EPackage
     EClass CASE_STATEMENT = eINSTANCE.getcase_statement();
 
     /**
+     * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CASE_STATEMENT__EXPRESSION = eINSTANCE.getcase_statement_Expression();
+
+    /**
+     * The meta object literal for the '<em><b>Case limbs</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CASE_STATEMENT__CASE_LIMBS = eINSTANCE.getcase_statement_Case_limbs();
+
+    /**
      * The meta object literal for the '{@link org.xtext.ufcg.compiladores.pascal.impl.case_limbImpl <em>case limb</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -6640,14 +6676,6 @@ public interface PascalPackage extends EPackage
      * @generated
      */
     EClass EXPRESSION = eINSTANCE.getexpression();
-
-    /**
-     * The meta object literal for the '<em><b>Case limbs</b></em>' containment reference list feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference EXPRESSION__CASE_LIMBS = eINSTANCE.getexpression_Case_limbs();
 
     /**
      * The meta object literal for the '<em><b>Expressions</b></em>' containment reference list feature.

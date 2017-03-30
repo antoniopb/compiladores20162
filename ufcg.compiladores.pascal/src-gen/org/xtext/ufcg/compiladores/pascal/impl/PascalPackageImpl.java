@@ -1863,6 +1863,26 @@ public class PascalPackageImpl extends EPackageImpl implements PascalPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EReference getcase_statement_Expression()
+  {
+    return (EReference)case_statementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getcase_statement_Case_limbs()
+  {
+    return (EReference)case_statementEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getcase_limb()
   {
     return case_limbEClass;
@@ -1963,7 +1983,7 @@ public class PascalPackageImpl extends EPackageImpl implements PascalPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getexpression_Case_limbs()
+  public EReference getexpression_Expressions()
   {
     return (EReference)expressionEClass.getEStructuralFeatures().get(0);
   }
@@ -1973,19 +1993,9 @@ public class PascalPackageImpl extends EPackageImpl implements PascalPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getexpression_Expressions()
-  {
-    return (EReference)expressionEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EAttribute getexpression_Operators()
   {
-    return (EAttribute)expressionEClass.getEStructuralFeatures().get(2);
+    return (EAttribute)expressionEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -3234,6 +3244,8 @@ public class PascalPackageImpl extends EPackageImpl implements PascalPackage
     createEReference(if_statementEClass, IF_STATEMENT__ELSE_STATEMENT);
 
     case_statementEClass = createEClass(CASE_STATEMENT);
+    createEReference(case_statementEClass, CASE_STATEMENT__EXPRESSION);
+    createEReference(case_statementEClass, CASE_STATEMENT__CASE_LIMBS);
 
     case_limbEClass = createEClass(CASE_LIMB);
     createEReference(case_limbEClass, CASE_LIMB__CASE_LIST);
@@ -3248,7 +3260,6 @@ public class PascalPackageImpl extends EPackageImpl implements PascalPackage
     createEReference(with_statementEClass, WITH_STATEMENT__STMT);
 
     expressionEClass = createEClass(EXPRESSION);
-    createEReference(expressionEClass, EXPRESSION__CASE_LIMBS);
     createEReference(expressionEClass, EXPRESSION__EXPRESSIONS);
     createEAttribute(expressionEClass, EXPRESSION__OPERATORS);
 
@@ -3420,7 +3431,6 @@ public class PascalPackageImpl extends EPackageImpl implements PascalPackage
 
     // Add supertypes to classes
     abstraction_headingEClass.getESuperTypes().add(this.getabstraction_declaration());
-    expressionEClass.getESuperTypes().add(this.getcase_statement());
 
     // Initialize classes and features; add operations and parameters
     initEClass(programEClass, program.class, "program", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3579,6 +3589,8 @@ public class PascalPackageImpl extends EPackageImpl implements PascalPackage
     initEReference(getif_statement_ElseStatement(), this.getstatement(), null, "elseStatement", null, 0, 1, if_statement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(case_statementEClass, case_statement.class, "case_statement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getcase_statement_Expression(), this.getexpression(), null, "expression", null, 0, 1, case_statement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getcase_statement_Case_limbs(), this.getcase_limb(), null, "case_limbs", null, 0, -1, case_statement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(case_limbEClass, case_limb.class, "case_limb", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getcase_limb_Case_list(), this.getcase_label_list(), null, "case_list", null, 0, 1, case_limb.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3593,7 +3605,6 @@ public class PascalPackageImpl extends EPackageImpl implements PascalPackage
     initEReference(getwith_statement_Stmt(), this.getstatement(), null, "stmt", null, 0, 1, with_statement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(expressionEClass, expression.class, "expression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getexpression_Case_limbs(), this.getcase_limb(), null, "case_limbs", null, 0, -1, expression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getexpression_Expressions(), this.getsimple_expression(), null, "expressions", null, 0, -1, expression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getexpression_Operators(), ecorePackage.getEString(), "operators", null, 0, -1, expression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
